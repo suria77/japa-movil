@@ -1075,13 +1075,20 @@ window.DISC_PAGES_B64 = {
   var MALA_BEADS = malasConfig[activeMalaName].beads;
   var MALA_SUFFIX = malasConfig[activeMalaName].suffix;
   var malaImages = [];
+  /* Las imagenes de malas estan repartidas en 3 carpetas (malas1/malas2/malas3)
+     porque GitHub no permite subir de una vez una sola carpeta con tantos archivos. */
+  function malaFolderForNum(m) {
+    if (m <= 9) return 'malas1/';
+    if (m <= 18) return 'malas2/';
+    return 'malas3/';
+  }
   function preloadMalaImages(base, beads, suffix) {
     malaImages = [];
     if (!base) return;
     for (var m = 0; m <= beads; m++) {
       var mNum = (m < 10 ? '0' + m : '' + m);
       var mImg = new Image();
-      mImg.src = base + mNum + (suffix || '') + '.png';
+      mImg.src = malaFolderForNum(m) + mNum + (suffix || '') + '.png';
       malaImages.push(mImg);
     }
   }
@@ -1101,22 +1108,22 @@ window.DISC_PAGES_B64 = {
   };
 
   var MANTRAS = [
-    { name: 'OM (MALA DE RUDRAKSHA)', desc: 'Asociado a la fuente universal y a la Trinidad hindú (Brahma, Vishnu y Shiva). Utilizado como el sonido primordial del universo para sintonizar con la paz profunda, la alineación cósmica y la conciencia absoluta.', audio: 'audio/OM.mp3' },
-    { name: 'OM GAM GANAPATAYE NAMAHA', desc: 'Asociado a Ganesha. Utilizado para eliminar obstáculos, atraer la buena fortuna y para los nuevos comienzos.', audio: 'audio/Ganesha1.mp3' },
-    { name: 'OM SHRIM LAKSHMIYEI NAMAHA', desc: 'Asociado a Lakshmi (la diosa de la abundancia, la prosperidad y la belleza). Utilizado para la atracción de la riqueza material y espiritual, la manifestación de proyectos, el cultivo de la gratitud y la plenitud en la vida.', audio: 'audio/Lakshmi.mp3' },
-    { name: 'MAHAMANTRA', desc: 'HARE KRISHNA HARE KRISHNA<br>KRISHNA KRISHNA HARE HARE<br>HARE RAMA HARE RAMA<br>RAMA RAMA HARE HARE<br><br>Asociado a Krishna y Rama. Utilizado para despertar el amor divino, purificar la mente y elevar la conciencia espiritual.', audio: 'audio/mahamantra.mp3' },
-    { name: 'OM NAMAH SHIVAYA', desc: 'Asociado a Shiva (el destructor de la ilusión y renovador). Utilizado para la transformación profunda, el desapego, la liberación espiritual y la paz interior.', audio: 'audio/om-nama-shivaya.mp3' },
-    { name: 'OM NAMO NARAYANAYA', desc: 'Asociado a Vishnu. Utilizado para cultivar la paz interior, purificar el corazón, rendirse a la protección divina y recordar la unidad de todo lo existente.', audio: 'audio/omnamonarayanaya.mp3' },
-    { name: 'OM NAMO BHAGAVATE VASUDEVAYA', desc: 'Asociado a Vishnu / Krishna. Utilizado para la entrega espiritual, la purificación del corazón, la paz mental y la conexión con la divinidad omnipresente.', audio: 'audio/omnamobhagavate.mp3' },
-    { name: 'OM HANUMATE NAMAHA', desc: 'Asociado a Hanuman. Utilizado para obtener fuerza, coraje, protección contra energías negativas y devoción inquebrantable.', audio: 'audio/omhanumate.mp3' },
-    { name: 'OM DUM DURGAYE NAMAHA', desc: 'Asociado a Durga. Utilizado para protección contra el peligro, superar miedos profundos y vencer obstáculos difíciles.', audio: 'audio/durgayei-amaha.mp3' },
-    { name: 'SRI RAM JAI RAM JAI JAI RAM', desc: 'Asociado a Rama. Utilizado para cultivar la rectitud (dharma), la armonía, la paciencia y la integridad personal.', audio: 'audio/sriramjairamjaijairam.mp3' },
-    { name: 'OM KALIKAYE NAMAHA', desc: 'Asociado a Kali. Utilizado para la transformación interior, la destrucción de los apegos egoicos y el renacimiento espiritual.', audio: 'audio/omkalikaye.mp3' },
-    { name: 'OM MANI PADME HUM (MALA DE BODHI)', desc: 'Asociado a Avalokiteshvara (el Buda de la Compasión). Utilizado para invocar la compasión universal, purificar el karma y transformar las emociones negativas en sabiduría.', audio: 'audio/ommanipadme.mp3' }
+    { name: 'OM (MALA DE RUDRAKSHA)', desc: 'Asociado a la fuente universal y a la Trinidad hindú (Brahma, Vishnu y Shiva). Utilizado como el sonido primordial del universo para sintonizar con la paz profunda, la alineación cósmica y la conciencia absoluta.', audio: 'audio4/OM.mp3' },
+    { name: 'OM GAM GANAPATAYE NAMAHA', desc: 'Asociado a Ganesha. Utilizado para eliminar obstáculos, atraer la buena fortuna y para los nuevos comienzos.', audio: 'audio4/Ganesha1.mp3' },
+    { name: 'OM SHRIM LAKSHMIYEI NAMAHA', desc: 'Asociado a Lakshmi (la diosa de la abundancia, la prosperidad y la belleza). Utilizado para la atracción de la riqueza material y espiritual, la manifestación de proyectos, el cultivo de la gratitud y la plenitud en la vida.', audio: 'audio4/Lakshmi.mp3' },
+    { name: 'MAHAMANTRA', desc: 'HARE KRISHNA HARE KRISHNA<br>KRISHNA KRISHNA HARE HARE<br>HARE RAMA HARE RAMA<br>RAMA RAMA HARE HARE<br><br>Asociado a Krishna y Rama. Utilizado para despertar el amor divino, purificar la mente y elevar la conciencia espiritual.', audio: 'audio4/mahamantra.mp3' },
+    { name: 'OM NAMAH SHIVAYA', desc: 'Asociado a Shiva (el destructor de la ilusión y renovador). Utilizado para la transformación profunda, el desapego, la liberación espiritual y la paz interior.', audio: 'audio4/om-nama-shivaya.mp3' },
+    { name: 'OM NAMO NARAYANAYA', desc: 'Asociado a Vishnu. Utilizado para cultivar la paz interior, purificar el corazón, rendirse a la protección divina y recordar la unidad de todo lo existente.', audio: 'audio4/omnamonarayanaya.mp3' },
+    { name: 'OM NAMO BHAGAVATE VASUDEVAYA', desc: 'Asociado a Vishnu / Krishna. Utilizado para la entrega espiritual, la purificación del corazón, la paz mental y la conexión con la divinidad omnipresente.', audio: 'audio4/omnamobhagavate.mp3' },
+    { name: 'OM HANUMATE NAMAHA', desc: 'Asociado a Hanuman. Utilizado para obtener fuerza, coraje, protección contra energías negativas y devoción inquebrantable.', audio: 'audio4/omhanumate.mp3' },
+    { name: 'OM DUM DURGAYE NAMAHA', desc: 'Asociado a Durga. Utilizado para protección contra el peligro, superar miedos profundos y vencer obstáculos difíciles.', audio: 'audio4/durgayei-amaha.mp3' },
+    { name: 'SRI RAM JAI RAM JAI JAI RAM', desc: 'Asociado a Rama. Utilizado para cultivar la rectitud (dharma), la armonía, la paciencia y la integridad personal.', audio: 'audio4/sriramjairamjaijairam.mp3' },
+    { name: 'OM KALIKAYE NAMAHA', desc: 'Asociado a Kali. Utilizado para la transformación interior, la destrucción de los apegos egoicos y el renacimiento espiritual.', audio: 'audio4/omkalikaye.mp3' },
+    { name: 'OM MANI PADME HUM (MALA DE BODHI)', desc: 'Asociado a Avalokiteshvara (el Buda de la Compasión). Utilizado para invocar la compasión universal, purificar el karma y transformar las emociones negativas en sabiduría.', audio: 'audio4/ommanipadme.mp3' }
   ];
 
-  var campanaFinalAudio = new Audio('audio/CAMPANA-FINAL.mp3');
-  var campanaIntermediaAudio = new Audio('audio/Campania-intermedia-1.mp3');
+  var campanaFinalAudio = new Audio('audio4/CAMPANA-FINAL.mp3');
+  var campanaIntermediaAudio = new Audio('audio4/Campania-intermedia-1.mp3');
 
   /* --- Carruseles de tienda: Packs / Libros & Audiolibros / Música --- */
   var STORE_BG = 'img/fondo-tienda.webp';
@@ -1542,7 +1549,7 @@ window.DISC_PAGES_B64 = {
     return (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
   }
 
-  var taanpuraAudio = new Audio('audio/taanpura1.mp3');
+  var taanpuraAudio = new Audio('audio1/taanpura1.mp3');
   var btnTaanpuraPlay = document.getElementById('jp-taanpura-play');
   var btnTaanpuraPause = document.getElementById('jp-taanpura-pause');
   var btnTaanpuraStop = document.getElementById('jp-taanpura-stop');
@@ -1581,7 +1588,7 @@ window.DISC_PAGES_B64 = {
     btnTaanpuraPlay.classList.remove('jp-hidden');
   });
 
-  var pazAudio = new Audio('audio/Paz-profunda.mp3');
+  var pazAudio = new Audio('audio3/Paz-profunda.mp3');
   var btnPazPlay = document.getElementById('jp-paz-play');
   var btnPazPause = document.getElementById('jp-paz-pause');
   var btnPazStop = document.getElementById('jp-paz-stop');
@@ -1620,7 +1627,7 @@ window.DISC_PAGES_B64 = {
     btnPazPlay.classList.remove('jp-hidden');
   });
 
-  var cosmosAudio = new Audio('audio/Cosmos.mp3');
+  var cosmosAudio = new Audio('audio2/Cosmos.mp3');
   var btnCosmosPlay = document.getElementById('jp-cosmos-play');
   var btnCosmosPause = document.getElementById('jp-cosmos-pause');
   var btnCosmosStop = document.getElementById('jp-cosmos-stop');
