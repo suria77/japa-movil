@@ -1303,7 +1303,7 @@ window.DISC_PAGES_B64 = {
         '</div>' +
       '</div>' +
       '<div class="jp-ring-wrap">' +
-        '<img class="jp-mala-ring-img" id="jp-mala-ring-img" src="' + (MALA_IMG_BASE ? MALA_IMG_BASE + '00' + MALA_SUFFIX + '.png' : '') + '" alt="Mala" />' +
+        '<img class="jp-mala-ring-img" id="jp-mala-ring-img" src="' + (MALA_IMG_BASE ? malaFolderForNum(0) + '00' + MALA_SUFFIX + '.png' : '') + '" alt="Mala" />' +
         '<div class="jp-ring-center">' +
           '<div class="jp-center-icon" id="jp-icon">' +
             '<img class="jp-om-img" src="img/om_neon_malva.png" alt="OM" />' +
@@ -1787,7 +1787,7 @@ window.DISC_PAGES_B64 = {
       beadIdx = ((val - 1) % MALA_BEADS) + 1;
     }
     var beadNum = (beadIdx < 10 ? '0' + beadIdx : '' + beadIdx);
-    malaRingImg.src = MALA_IMG_BASE + beadNum + MALA_SUFFIX + '.png';
+    malaRingImg.src = malaFolderForNum(beadIdx) + beadNum + MALA_SUFFIX + '.png';
   }
 
   function setLockUIState(locked) {
