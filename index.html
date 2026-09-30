@@ -110,8 +110,8 @@ window.DISC_PAGES_B64 = {
       letter-spacing: 0.02em;
     }
     .jp-btn-tutorial {
-      font-size: 10.5px !important;
-      padding: 6px 10px !important;
+      font-size: 9px !important;
+      padding: 5px 8px !important;
     }
     .jp-top-tabs {
       top: 10px;
@@ -280,9 +280,14 @@ window.DISC_PAGES_B64 = {
     color: var(--jp-bg2);
   }
 
-  .jp-btn-audios, .jp-btn-deidad, .jp-btn-mala, .jp-btn-mantra, .jp-btn-tutorial {
+  .jp-btn-audios, .jp-btn-deidad, .jp-btn-mala, .jp-btn-mantra {
     font-size: 13.5px;
     padding: 10px 18px;
+  }
+
+  .jp-btn-tutorial {
+    font-size: 11.5px;
+    padding: 7px 13px;
   }
 
   .jp-dropdown-container {
@@ -335,6 +340,19 @@ window.DISC_PAGES_B64 = {
   }
   .jp-mala-open .jp-mala-info { transform: rotate(180deg); }
   .jp-mala-open .jp-mala-desc { display: block; }
+  .jp-mala-planeta {
+    display: block;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+  #jp-mala-menu {
+    max-height: 65vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
   .jp-mala-desc {
     display: none;
     margin-top: 5px;
@@ -1086,7 +1104,16 @@ window.DISC_PAGES_B64 = {
     'Sandalo Blanco': { base: 'malas/', beads: 27, suffix: 'sb' },
     'Semillas de Loto': { base: 'malas/', beads: 27, suffix: 'l' },
     'Hueso': { base: 'malas/', beads: 27, suffix: 'h' },
-    'Sphatik': { base: 'malas/', beads: 27, suffix: 'c' }
+    'Sphatik': { base: 'malas/', beads: 27, suffix: 'c' },
+    'Rubi': { base: 'rubi/', beads: 27, suffix: 'rb' },
+    'Perla': { base: 'perlas/', beads: 27, suffix: 'pe' },
+    'Coral Rojo': { base: 'coral/', beads: 27, suffix: 'co' },
+    'Esmeralda': { base: 'esmeralda/', beads: 27, suffix: 'es' },
+    'Zafiro Amarillo': { base: 'zafiro_amarillo/', beads: 27, suffix: 'za' },
+    'Diamante': { base: 'diamante/', beads: 27, suffix: 'di' },
+    'Zafiro Azul': { base: 'zafiro_azul/', beads: 27, suffix: 'zu' },
+    'Hessonita': { base: 'hesonita/', beads: 27, suffix: 'he' },
+    'Ojo de Gato': { base: 'ojo_gato/', beads: 27, suffix: 'og' }
   };
   var activeMalaName = 'Rudraksha';
   var MALA_IMG_BASE = malasConfig[activeMalaName].base;
@@ -1095,7 +1122,11 @@ window.DISC_PAGES_B64 = {
   var malaImages = [];
   /* Las imagenes de malas estan repartidas en 3 carpetas (malas1/malas2/malas3)
      porque GitHub no permite subir de una vez una sola carpeta con tantos archivos. */
-  function malaFolderForNum(m) {
+  /* Las malas nuevas (piedras de los planetas) tienen cada una su propia
+     carpeta con sus 28 imagenes: se usa directamente su 'base'. */
+  function malaFolderForNum(m, base) {
+    base = base || MALA_IMG_BASE;
+    if (base && base !== 'malas/') return base;
     if (m <= 9) return 'malas1/';
     if (m <= 18) return 'malas2/';
     return 'malas3/';
@@ -1106,7 +1137,7 @@ window.DISC_PAGES_B64 = {
     for (var m = 0; m <= beads; m++) {
       var mNum = (m < 10 ? '0' + m : '' + m);
       var mImg = new Image();
-      mImg.src = malaFolderForNum(m) + mNum + (suffix || '') + '.png';
+      mImg.src = malaFolderForNum(m, base) + mNum + (suffix || '') + '.png';
       malaImages.push(mImg);
     }
   }
@@ -1247,6 +1278,15 @@ window.DISC_PAGES_B64 = {
             '<div class="jp-deidad-item" data-mala="Semillas de Loto">Semillas de Loto</div>' +
             '<div class="jp-deidad-item" data-mala="Hueso">Hueso</div>' +
             '<div class="jp-deidad-item" data-mala="Sphatik">Sphatik (cuarzo transparente)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">Calma el estr&eacute;s, la ansiedad y la ira. Favorece la paz interior, la sanaci&oacute;n y la concentraci&oacute;n mental, y ayuda a dormir bien. Asociada a Sarasvati, Lakshmi, Shukra (Venus) y Chandra (la Luna).</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Rubi">Rub&iacute; (Manikya)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Surya (Sol)</span>Despierta el fuego interior, la vitalidad pura y la luz de la soberan&iacute;a personal.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Perla">Perla (Moti)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Chandra (Luna)</span>Aquieta las mareas emocionales y aporta calma, intuici&oacute;n y serenidad a la mente.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Coral Rojo">Coral Rojo (Moonga)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Mangal (Marte)</span>Transforma el impulso en coraje, enfoque y voluntad inquebrantable para vencer los obst&aacute;culos.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Esmeralda">Esmeralda (Panna)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Budha (Mercurio)</span>Afila el discernimiento, la elocuencia y la flexibilidad mental para comprender la verdad.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Zafiro Amarillo">Zafiro Amarillo (Pukhraj)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Guru (J&uacute;piter)</span>Expande la sabidur&iacute;a divina, la prosperidad y la devoci&oacute;n por el camino espiritual.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Diamante">Diamante (Hira)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Shukra (Venus)</span>Eleva la sensibilidad hacia la belleza, la pureza del amor y la abundancia del coraz&oacute;n.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Zafiro Azul">Zafiro Azul (Neelam)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Shani (Saturno)</span>Ense&ntilde;a la paciencia, la disciplina sagrada y la fortaleza para trascender toda prueba.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Hessonita">Hessonita (Gomedh)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Rahu (Nodo Norte)</span>Disuelve la ilusi&oacute;n y el apego, transformando la confusi&oacute;n en visi&oacute;n trascendente.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Ojo de Gato">Ojo de Gato (Lahsunya)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Ketu (Nodo Sur)</span>Abre la percepci&oacute;n sutil y la intuici&oacute;n profunda que conducen a la liberaci&oacute;n interior.</span></div>' +
           '</div>' +
         '</div>' +
         '<div class="jp-dropdown-container">' +
