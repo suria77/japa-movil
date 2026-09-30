@@ -109,9 +109,11 @@ window.DISC_PAGES_B64 = {
       padding: 6px 10px !important;
       letter-spacing: 0.02em;
     }
+    .jp-top-btn .jp-ico { width: 12px; height: 12px; margin-right: 5px; }
     .jp-btn-tutorial {
       font-size: 9px !important;
       padding: 5px 8px !important;
+      margin-top: 4px;
     }
     .jp-top-tabs {
       top: 10px;
@@ -119,14 +121,14 @@ window.DISC_PAGES_B64 = {
       gap: 6px;
     }
     .jp-top-deity-img {
-      width: clamp(150px, calc(100vw - 165px), 300px);
-      height: clamp(150px, calc(100vw - 165px), 300px);
+      width: clamp(140px, calc(100vw - 178px), 300px);
+      height: clamp(140px, calc(100vw - 178px), 300px);
       top: 12px;
       left: 12px;
     }
     .jp-top-deity-img.jp-top-deity-img-rama {
-      width: clamp(190px, calc(100vw - 125px), 380px);
-      height: clamp(190px, calc(100vw - 125px), 380px);
+      width: clamp(170px, calc(100vw - 160px), 380px);
+      height: clamp(170px, calc(100vw - 160px), 380px);
       top: 8px;
       left: 6px;
     }
@@ -255,7 +257,8 @@ window.DISC_PAGES_B64 = {
     right: 16px;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: stretch;
+    width: max-content;
     gap: 8px;
     z-index: 20;
   }
@@ -285,16 +288,28 @@ window.DISC_PAGES_B64 = {
     padding: 10px 18px;
   }
 
+  .jp-btn-rituales {
+    font-size: 13.5px;
+    padding: 10px 18px;
+  }
+  .jp-top-btn .jp-ico { flex: none; margin-right: 7px; }
+  .jp-btn-label { white-space: nowrap; }
+  /* Tutorial: es una ayuda, no una opcion de practica; mas discreto y separado */
   .jp-btn-tutorial {
-    font-size: 11.5px;
-    padding: 7px 13px;
+    font-size: 11px;
+    padding: 6px 12px;
+    margin-top: 6px;
+    align-self: flex-end;
+    background: transparent;
+    border-color: rgba(192, 132, 252, 0.45);
+    font-weight: 600;
   }
 
   .jp-dropdown-container {
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: stretch;
   }
 
   .jp-dropdown-menu {
@@ -365,6 +380,19 @@ window.DISC_PAGES_B64 = {
   .jp-mala-group-list { display: none; }
   .jp-group-open .jp-mala-group-list { display: block; }
   .jp-mala-group-list .jp-deidad-item { padding-left: 24px; }
+  .jp-deidad-malas-line {
+    display: block;
+    margin-top: 5px;
+    font-size: 11.5px;
+    color: var(--jp-cream);
+    opacity: 0.85;
+  }
+  .jp-deidad-malas-line b { color: var(--jp-violet); letter-spacing: 0.03em; }
+  #jp-deidad-menu {
+    max-height: 65vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
   #jp-mala-menu {
     max-height: 65vh;
     overflow-y: auto;
@@ -1270,22 +1298,22 @@ window.DISC_PAGES_B64 = {
       '</div>' +
       '<div class="jp-top-tabs" id="jp-top-tabs">' +
         '<div class="jp-dropdown-container">' +
-          '<button class="jp-top-btn jp-btn-deidad" id="jp-btn-deidad">ELIGE DEIDAD &#9662;</button>' +
+          '<button class="jp-top-btn jp-btn-deidad" id="jp-btn-deidad"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4c2 2.5 2 5.5 0 8-2-2.5-2-5.5 0-8z"/><path d="M12 12c-.5-3 1.5-5.5 5-6-.2 3.2-2 5.4-5 6z"/><path d="M12 12c.5-3-1.5-5.5-5-6 .2 3.2 2 5.4 5 6z"/><path d="M5 13c4 0 6 2 7 5 1-3 3-5 7-5-1 4-4 7-7 7s-6-3-7-7z"/></svg><span class="jp-btn-label">ELIGE DEIDAD &#9662;</span></button>' +
           '<div class="jp-dropdown-menu jp-hidden" id="jp-deidad-menu">' +
-            '<div class="jp-deidad-item" data-name="Ganesha">Ganesha:<span class="jp-deidad-malas">S&aacute;ndalo Rojo, Rudraksha</span></div>' +
-            '<div class="jp-deidad-item" data-name="Shiva">Shiva:<span class="jp-deidad-malas">Rudraksha</span></div>' +
-            '<div class="jp-deidad-item" data-name="Vishnu">Vishnu:<span class="jp-deidad-malas">Tulsi, S&aacute;ndalo Blanco</span></div>' +
-            '<div class="jp-deidad-item" data-name="Krishna">Krishna:<span class="jp-deidad-malas">Tulsi</span></div>' +
-            '<div class="jp-deidad-item" data-name="Rama">Rama:<span class="jp-deidad-malas">Tulsi</span></div>' +
-            '<div class="jp-deidad-item" data-name="Hanuman">Hanuman:<span class="jp-deidad-malas">Rudraksha y tulsi</span></div>' +
-            '<div class="jp-deidad-item" data-name="Buda">Buda:<span class="jp-deidad-malas">Bodhi</span></div>' +
-            '<div class="jp-deidad-item" data-name="Lakshmi">Lakshmi:<span class="jp-deidad-malas">S&aacute;ndalo Rojo, Semillas de Loto, Sphatik</span></div>' +
-            '<div class="jp-deidad-item" data-name="Durga">Durga:<span class="jp-deidad-malas">Rudraksha, S&aacute;ndalo Rojo</span></div>' +
-            '<div class="jp-deidad-item" data-name="Kali">Kali:<span class="jp-deidad-malas">Rudraksha, Hueso</span></div>' +
+            '<div class="jp-deidad-item" data-name="Ganesha">Ganesha<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El que elimina los obst&aacute;culos: trae claridad, buenos comienzos, sabidur&iacute;a y &eacute;xito en cada empresa.<span class="jp-deidad-malas-line"><b>Malas:</b> S&aacute;ndalo Rojo, Rudraksha</span></span></div>' +
+            '<div class="jp-deidad-item" data-name="Shiva">Shiva<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El gran yogui: transforma lo viejo, aquieta la mente y conduce a la meditaci&oacute;n profunda y la liberaci&oacute;n.<span class="jp-deidad-malas-line"><b>Malas:</b> Rudraksha</span></span></div>' +
+            '<div class="jp-deidad-item" data-name="Vishnu">Vishnu<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El sostenedor del universo: aporta orden, protecci&oacute;n, equilibrio y armon&iacute;a a la vida.<span class="jp-deidad-malas-line"><b>Malas:</b> Tulsi, S&aacute;ndalo Blanco</span></span></div>' +
+            '<div class="jp-deidad-item" data-name="Krishna">Krishna<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El amor y la alegr&iacute;a divinos: abre el coraz&oacute;n a la devoci&oacute;n, el juego y la entrega confiada.<span class="jp-deidad-malas-line"><b>Malas:</b> Tulsi</span></span></div>' +
+            '<div class="jp-deidad-item" data-name="Rama">Rama<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El rey justo: inspira rectitud, fidelidad a la palabra dada y fuerza serena ante las pruebas.<span class="jp-deidad-malas-line"><b>Malas:</b> Tulsi</span></span></div>' +
+            '<div class="jp-deidad-item" data-name="Hanuman">Hanuman<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El devoto perfecto: concede fuerza, valent&iacute;a, protecci&oacute;n y entrega total al servicio.<span class="jp-deidad-malas-line"><b>Malas:</b> Rudraksha, Tulsi</span></span></div>' +
+            '<div class="jp-deidad-item" data-name="Buda">Buda<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El despierto: gu&iacute;a hacia la atenci&oacute;n plena, la compasi&oacute;n y la liberaci&oacute;n del sufrimiento.<span class="jp-deidad-malas-line"><b>Malas:</b> Bodhi</span></span></div>' +
+            '<div class="jp-deidad-item" data-name="Lakshmi">Lakshmi<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">La diosa de la abundancia: atrae prosperidad, belleza, gracia y bienestar en todos los planos.<span class="jp-deidad-malas-line"><b>Malas:</b> S&aacute;ndalo Rojo, Semillas de Loto, Sphatik</span></span></div>' +
+            '<div class="jp-deidad-item" data-name="Durga">Durga<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">La Madre protectora: da coraje, firmeza y victoria sobre las fuerzas que nos limitan.<span class="jp-deidad-malas-line"><b>Malas:</b> Rudraksha, S&aacute;ndalo Rojo</span></span></div>' +
+            '<div class="jp-deidad-item" data-name="Kali">Kali<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">La fuerza del tiempo y la transformaci&oacute;n: disuelve el ego y el miedo y abre paso a la liberaci&oacute;n.<span class="jp-deidad-malas-line"><b>Malas:</b> Rudraksha, Hueso</span></span></div>' +
           '</div>' +
         '</div>' +
         '<div class="jp-dropdown-container">' +
-          '<button class="jp-top-btn jp-btn-mala" id="jp-btn-mala">ELIGE MALA &#9662;</button>' +
+          '<button class="jp-top-btn jp-btn-mala" id="jp-btn-mala"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.7"/><circle cx="17.7" cy="7" r="1.7"/><circle cx="19.5" cy="12.5" r="1.7"/><circle cx="17" cy="18" r="1.7"/><circle cx="12" cy="20" r="1.7"/><circle cx="7" cy="18" r="1.7"/><circle cx="4.5" cy="12.5" r="1.7"/><circle cx="6.3" cy="7" r="1.7"/></svg><span class="jp-btn-label">ELIGE MALA &#9662;</span></button>' +
           '<div class="jp-dropdown-menu jp-hidden" id="jp-mala-menu">' +
             '<div class="jp-mala-group">' +
             '<div class="jp-mala-group-title">Malas de deidades<span class="jp-mala-group-arrow">&#9662;</span></div>' +
@@ -1315,11 +1343,11 @@ window.DISC_PAGES_B64 = {
           '</div>' +
         '</div>' +
         '<div class="jp-dropdown-container">' +
-          '<button class="jp-top-btn jp-btn-mantra" id="jp-btn-mantra">ELIGE MANTRA &#9662;</button>' +
+          '<button class="jp-top-btn jp-btn-mantra" id="jp-btn-mantra"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v4"/><path d="M8 7v10"/><path d="M12 4v16"/><path d="M16 8v8"/><path d="M20 10.5v3"/></svg><span class="jp-btn-label">ELIGE MANTRA &#9662;</span></button>' +
           '<div class="jp-dropdown-menu jp-mantra-menu jp-hidden" id="jp-mantra-menu"></div>' +
         '</div>' +
         '<div class="jp-dropdown-container">' +
-          '<button class="jp-top-btn jp-btn-audios" id="jp-btn-audios">FONDO &#9662;</button>' +
+          '<button class="jp-top-btn jp-btn-audios" id="jp-btn-audios"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg><span class="jp-btn-label">FONDO &#9662;</span></button>' +
           '<div class="jp-dropdown-menu jp-hidden" id="jp-audios-menu">' +
             '<div class="jp-audio-player">' +
               '<div class="jp-audio-header">' +
@@ -1368,7 +1396,8 @@ window.DISC_PAGES_B64 = {
             '</div>' +
           '</div>' +
         '</div>' +
-        '<button class="jp-top-btn jp-btn-tutorial" id="jp-btn-tutorial">TUTORIAL</button>' +
+        '<button class="jp-top-btn jp-btn-rituales" id="jp-btn-rituales"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.5 1 2 2 2-.5-3 .2-5.5 1-8z"/></svg><span class="jp-btn-label">RITUALES</span></button>' +
+        '<button class="jp-top-btn jp-btn-tutorial" id="jp-btn-tutorial"><span class="jp-btn-label">? TUTORIAL</span></button>' +
       '</div>' +
       '<img class="jp-title-img" src="img/File-2026-08-20-14-40-09.png" alt="Japa-Móvil" />' +
       '<p class="jp-subtitle" id="jp-subtitle">Contar por detecci&oacute;n de voz.</p>' +
@@ -1487,7 +1516,12 @@ window.DISC_PAGES_B64 = {
   deidadMenu.addEventListener('click', function(e) { e.stopPropagation(); });
   var deidadItems = deidadMenu.querySelectorAll('.jp-deidad-item');
   deidadItems.forEach(function(item) {
-    item.addEventListener('click', function() {
+    item.addEventListener('click', function(ev) {
+      if (ev.target.closest && ev.target.closest('.jp-mala-desc')) { return; }
+      if (ev.target.closest && ev.target.closest('.jp-mala-info')) {
+        item.classList.toggle('jp-mala-open');
+        return;
+      }
       var dName = item.getAttribute('data-name');
       if (deidadesImages[dName]) {
         topDeityImg.src = deidadesImages[dName];
