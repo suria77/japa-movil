@@ -327,6 +327,15 @@ window.DISC_PAGES_B64 = {
     color: var(--jp-violet);
   }
 
+  .jp-mala-desc {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--jp-violet);
+    white-space: normal;
+  }
   .jp-deidad-malas {
     color: var(--jp-violet);
     font-weight: 700;
@@ -1068,7 +1077,8 @@ window.DISC_PAGES_B64 = {
     'Bodhi': { base: 'malas/', beads: 27, suffix: 'bd' },
     'Sandalo Blanco': { base: 'malas/', beads: 27, suffix: 'sb' },
     'Semillas de Loto': { base: 'malas/', beads: 27, suffix: 'l' },
-    'Hueso': { base: 'malas/', beads: 27, suffix: 'h' }
+    'Hueso': { base: 'malas/', beads: 27, suffix: 'h' },
+    'Sphatik': { base: 'malas/', beads: 27, suffix: 'c' }
   };
   var activeMalaName = 'Rudraksha';
   var MALA_IMG_BASE = malasConfig[activeMalaName].base;
@@ -1213,7 +1223,7 @@ window.DISC_PAGES_B64 = {
             '<div class="jp-deidad-item" data-name="Rama">Rama:<span class="jp-deidad-malas">Tulsi</span></div>' +
             '<div class="jp-deidad-item" data-name="Hanuman">Hanuman:<span class="jp-deidad-malas">Rudraksha y tulsi</span></div>' +
             '<div class="jp-deidad-item" data-name="Buda">Buda:<span class="jp-deidad-malas">Bodhi</span></div>' +
-            '<div class="jp-deidad-item" data-name="Lakshmi">Lakshmi:<span class="jp-deidad-malas">S&aacute;ndalo Rojo, Semillas de Loto</span></div>' +
+            '<div class="jp-deidad-item" data-name="Lakshmi">Lakshmi:<span class="jp-deidad-malas">S&aacute;ndalo Rojo, Semillas de Loto, Sphatik</span></div>' +
             '<div class="jp-deidad-item" data-name="Durga">Durga:<span class="jp-deidad-malas">Rudraksha, S&aacute;ndalo Rojo</span></div>' +
             '<div class="jp-deidad-item" data-name="Kali">Kali:<span class="jp-deidad-malas">Rudraksha, Hueso</span></div>' +
           '</div>' +
@@ -1228,6 +1238,7 @@ window.DISC_PAGES_B64 = {
             '<div class="jp-deidad-item" data-mala="Sandalo Blanco">S&aacute;ndalo Blanco</div>' +
             '<div class="jp-deidad-item" data-mala="Semillas de Loto">Semillas de Loto</div>' +
             '<div class="jp-deidad-item" data-mala="Hueso">Hueso</div>' +
+            '<div class="jp-deidad-item" data-mala="Sphatik">Sphatik (cuarzo transparente)<span class="jp-mala-desc">Calma el estr&eacute;s, la ansiedad y la ira. Favorece la paz interior, la sanaci&oacute;n y la concentraci&oacute;n mental, y ayuda a dormir bien. Asociada a Sarasvati, Lakshmi, Shukra (Venus) y Chandra (la Luna).</span></div>' +
           '</div>' +
         '</div>' +
         '<div class="jp-dropdown-container">' +
