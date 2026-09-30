@@ -292,7 +292,12 @@ window.DISC_PAGES_B64 = {
     font-size: 13.5px;
     padding: 10px 18px;
   }
-  .jp-top-btn .jp-ico { flex: none; margin-right: 7px; }
+  .jp-top-btn .jp-ico { flex: none; margin-right: 8px; }
+  /* Botones principales: icono y texto alineados a la izquierda, todos a la misma altura */
+  .jp-btn-deidad, .jp-btn-mala, .jp-btn-mantra, .jp-btn-audios, .jp-btn-rituales {
+    justify-content: flex-start;
+    text-align: left;
+  }
   .jp-btn-label { white-space: nowrap; }
   /* Tutorial: es una ayuda, no una opcion de practica; mas discreto y separado */
   .jp-btn-tutorial {
@@ -388,6 +393,8 @@ window.DISC_PAGES_B64 = {
     opacity: 0.85;
   }
   .jp-deidad-malas-line b { color: var(--jp-violet); letter-spacing: 0.03em; }
+  .jp-planet-group { border-top: 2px solid rgba(192, 132, 252, 0.45); }
+  .jp-planet-sym { color: var(--jp-violet); margin-right: 8px; font-size: 15px; }
   #jp-deidad-menu {
     max-height: 65vh;
     overflow-y: auto;
@@ -1200,6 +1207,13 @@ window.DISC_PAGES_B64 = {
     'Kali': 'img/Sin-titulo-27.png',
     'Hanuman': 'img/hanuman.png'
   };
+  /* Imagenes de los planetas: cuando las tengas, pon aqui su ruta
+     (por ejemplo 'Surya': 'img/surya.png'). Mientras este vacia, al elegir
+     el planeta se mantiene la imagen de deidad que hubiera. */
+  var planetasImages = {
+    'Surya': '', 'Chandra': '', 'Mangal': '', 'Budha': '', 'Guru': '',
+    'Shukra': '', 'Shani': '', 'Rahu': '', 'Ketu': ''
+  };
 
   var MANTRAS = [
     { name: 'OM (MALA DE RUDRAKSHA)', desc: 'Asociado a la fuente universal y a la Trinidad hindú (Brahma, Vishnu y Shiva). Utilizado como el sonido primordial del universo para sintonizar con la paz profunda, la alineación cósmica y la conciencia absoluta.', audio: 'audio4/OM.mp3' },
@@ -1310,6 +1324,19 @@ window.DISC_PAGES_B64 = {
             '<div class="jp-deidad-item" data-name="Lakshmi">Lakshmi<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">La diosa de la abundancia: atrae prosperidad, belleza, gracia y bienestar en todos los planos.<span class="jp-deidad-malas-line"><b>Malas:</b> S&aacute;ndalo Rojo, Semillas de Loto, Sphatik</span></span></div>' +
             '<div class="jp-deidad-item" data-name="Durga">Durga<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">La Madre protectora: da coraje, firmeza y victoria sobre las fuerzas que nos limitan.<span class="jp-deidad-malas-line"><b>Malas:</b> Rudraksha, S&aacute;ndalo Rojo</span></span></div>' +
             '<div class="jp-deidad-item" data-name="Kali">Kali<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">La fuerza del tiempo y la transformaci&oacute;n: disuelve el ego y el miedo y abre paso a la liberaci&oacute;n.<span class="jp-deidad-malas-line"><b>Malas:</b> Rudraksha, Hueso</span></span></div>' +
+            '<div class="jp-mala-group jp-planet-group">' +
+            '<div class="jp-mala-group-title"><span class="jp-planet-sym">&#9737;</span>Planetas<span class="jp-mala-group-arrow">&#9662;</span></div>' +
+            '<div class="jp-mala-group-list">' +
+            '<div class="jp-deidad-item" data-planet="Surya">Surya (Sol)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El alma y la luz de la conciencia: rige la vitalidad, la confianza, el liderazgo y el prop&oacute;sito vital.<span class="jp-deidad-malas-line"><b>Mala:</b> Rub&iacute;</span></span></div>' +
+            '<div class="jp-deidad-item" data-planet="Chandra">Chandra (Luna)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">La mente y las emociones: rige la sensibilidad, la intuici&oacute;n, la memoria y la paz interior.<span class="jp-deidad-malas-line"><b>Mala:</b> Perla</span></span></div>' +
+            '<div class="jp-deidad-item" data-planet="Mangal">Mangal (Marte)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El guerrero: rige la energ&iacute;a, el coraje, la acci&oacute;n decidida y la fuerza para superar obst&aacute;culos.<span class="jp-deidad-malas-line"><b>Mala:</b> Coral Rojo</span></span></div>' +
+            '<div class="jp-deidad-item" data-planet="Budha">Budha (Mercurio)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El intelecto: rige la comunicaci&oacute;n, el aprendizaje, el discernimiento y la agilidad mental.<span class="jp-deidad-malas-line"><b>Mala:</b> Esmeralda</span></span></div>' +
+            '<div class="jp-deidad-item" data-planet="Guru">Guru (J&uacute;piter)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El maestro: rige la sabidur&iacute;a, la expansi&oacute;n, la buena fortuna y la gu&iacute;a espiritual.<span class="jp-deidad-malas-line"><b>Mala:</b> Zafiro Amarillo</span></span></div>' +
+            '<div class="jp-deidad-item" data-planet="Shukra">Shukra (Venus)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">Rige el amor, la belleza, el arte, el disfrute y la armon&iacute;a en las relaciones.<span class="jp-deidad-malas-line"><b>Mala:</b> Diamante</span></span></div>' +
+            '<div class="jp-deidad-item" data-planet="Shani">Shani (Saturno)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El maestro del karma: rige la disciplina, la paciencia, la responsabilidad y la madurez.<span class="jp-deidad-malas-line"><b>Mala:</b> Zafiro Azul</span></span></div>' +
+            '<div class="jp-deidad-item" data-planet="Rahu">Rahu (Nodo Norte)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">La sombra que anhela: rige el deseo, la ambici&oacute;n, lo inesperado y las ilusiones del mundo.<span class="jp-deidad-malas-line"><b>Mala:</b> Hessonita</span></span></div>' +
+            '<div class="jp-deidad-item" data-planet="Ketu">Ketu (Nodo Sur)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">La sombra que suelta: rige el desapego, la intuici&oacute;n m&iacute;stica y el camino hacia la liberaci&oacute;n.<span class="jp-deidad-malas-line"><b>Mala:</b> Ojo de Gato</span></span></div>' +
+            '</div></div>' +
           '</div>' +
         '</div>' +
         '<div class="jp-dropdown-container">' +
@@ -1514,12 +1541,28 @@ window.DISC_PAGES_B64 = {
     deidadMenu.classList.toggle('jp-hidden');
   });
   deidadMenu.addEventListener('click', function(e) { e.stopPropagation(); });
+  deidadMenu.querySelectorAll('.jp-mala-group').forEach(function(group) {
+    group.querySelector('.jp-mala-group-title').addEventListener('click', function() {
+      group.classList.toggle('jp-group-open');
+    });
+  });
   var deidadItems = deidadMenu.querySelectorAll('.jp-deidad-item');
   deidadItems.forEach(function(item) {
     item.addEventListener('click', function(ev) {
       if (ev.target.closest && ev.target.closest('.jp-mala-desc')) { return; }
       if (ev.target.closest && ev.target.closest('.jp-mala-info')) {
         item.classList.toggle('jp-mala-open');
+        return;
+      }
+      var pName = item.getAttribute('data-planet');
+      if (pName) {
+        if (planetasImages[pName]) {
+          topDeityImg.src = planetasImages[pName];
+          topDeityImg.alt = pName;
+          topDeityImg.classList.remove('jp-hidden');
+          topDeityImg.classList.remove('jp-top-deity-img-rama');
+        }
+        deidadMenu.classList.add('jp-hidden');
         return;
       }
       var dName = item.getAttribute('data-name');
