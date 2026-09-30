@@ -327,8 +327,16 @@ window.DISC_PAGES_B64 = {
     color: var(--jp-violet);
   }
 
+  .jp-mala-info {
+    float: right;
+    padding: 0 4px 0 12px;
+    color: var(--jp-violet);
+    cursor: pointer;
+  }
+  .jp-mala-open .jp-mala-info { transform: rotate(180deg); }
+  .jp-mala-open .jp-mala-desc { display: block; }
   .jp-mala-desc {
-    display: block;
+    display: none;
     margin-top: 5px;
     font-size: 12px;
     font-weight: 400;
@@ -1238,7 +1246,7 @@ window.DISC_PAGES_B64 = {
             '<div class="jp-deidad-item" data-mala="Sandalo Blanco">S&aacute;ndalo Blanco</div>' +
             '<div class="jp-deidad-item" data-mala="Semillas de Loto">Semillas de Loto</div>' +
             '<div class="jp-deidad-item" data-mala="Hueso">Hueso</div>' +
-            '<div class="jp-deidad-item" data-mala="Sphatik">Sphatik (cuarzo transparente)<span class="jp-mala-desc">Calma el estr&eacute;s, la ansiedad y la ira. Favorece la paz interior, la sanaci&oacute;n y la concentraci&oacute;n mental, y ayuda a dormir bien. Asociada a Sarasvati, Lakshmi, Shukra (Venus) y Chandra (la Luna).</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Sphatik">Sphatik (cuarzo transparente)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">Calma el estr&eacute;s, la ansiedad y la ira. Favorece la paz interior, la sanaci&oacute;n y la concentraci&oacute;n mental, y ayuda a dormir bien. Asociada a Sarasvati, Lakshmi, Shukra (Venus) y Chandra (la Luna).</span></div>' +
           '</div>' +
         '</div>' +
         '<div class="jp-dropdown-container">' +
@@ -1442,7 +1450,12 @@ window.DISC_PAGES_B64 = {
   malaMenu.addEventListener('click', function(e) { e.stopPropagation(); });
   var malaItems = malaMenu.querySelectorAll('.jp-deidad-item');
   malaItems.forEach(function(item) {
-    item.addEventListener('click', function() {
+    item.addEventListener('click', function(ev) {
+      if (ev.target.closest && ev.target.closest('.jp-mala-desc')) { return; }
+      if (ev.target.closest && ev.target.closest('.jp-mala-info')) {
+        item.classList.toggle('jp-mala-open');
+        return;
+      }
       var mName = item.getAttribute('data-mala');
       var cfg = malasConfig[mName];
       malaMenu.classList.add('jp-hidden');
