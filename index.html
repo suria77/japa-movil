@@ -348,6 +348,23 @@ window.DISC_PAGES_B64 = {
     text-transform: uppercase;
     font-size: 11px;
   }
+  .jp-mala-group-title {
+    padding: 12px 16px;
+    color: var(--jp-cream);
+    font-size: 14.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(192, 132, 252, 0.08);
+  }
+  .jp-mala-group-title:hover { color: var(--jp-violet); }
+  .jp-mala-group-arrow { float: right; color: var(--jp-violet); transition: transform 0.2s ease; }
+  .jp-group-open .jp-mala-group-arrow { transform: rotate(180deg); }
+  .jp-mala-group-list { display: none; }
+  .jp-group-open .jp-mala-group-list { display: block; }
+  .jp-mala-group-list .jp-deidad-item { padding-left: 24px; }
   #jp-mala-menu {
     max-height: 65vh;
     overflow-y: auto;
@@ -1270,14 +1287,21 @@ window.DISC_PAGES_B64 = {
         '<div class="jp-dropdown-container">' +
           '<button class="jp-top-btn jp-btn-mala" id="jp-btn-mala">ELIGE MALA &#9662;</button>' +
           '<div class="jp-dropdown-menu jp-hidden" id="jp-mala-menu">' +
-            '<div class="jp-deidad-item" data-mala="Rudraksha">Rudraksha</div>' +
-            '<div class="jp-deidad-item" data-mala="Tulsi">Tulsi</div>' +
-            '<div class="jp-deidad-item" data-mala="Sandalo Rojo">S&aacute;ndalo Rojo</div>' +
-            '<div class="jp-deidad-item" data-mala="Bodhi">Bodhi</div>' +
-            '<div class="jp-deidad-item" data-mala="Sandalo Blanco">S&aacute;ndalo Blanco</div>' +
-            '<div class="jp-deidad-item" data-mala="Semillas de Loto">Semillas de Loto</div>' +
-            '<div class="jp-deidad-item" data-mala="Hueso">Hueso</div>' +
-            '<div class="jp-deidad-item" data-mala="Sphatik">Sphatik (cuarzo transparente)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">Calma el estr&eacute;s, la ansiedad y la ira. Favorece la paz interior, la sanaci&oacute;n y la concentraci&oacute;n mental, y ayuda a dormir bien. Asociada a Sarasvati, Lakshmi, Shukra (Venus) y Chandra (la Luna).</span></div>' +
+            '<div class="jp-mala-group">' +
+            '<div class="jp-mala-group-title">Malas de deidades<span class="jp-mala-group-arrow">&#9662;</span></div>' +
+            '<div class="jp-mala-group-list">' +
+            '<div class="jp-deidad-item" data-mala="Rudraksha">Rudraksha<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Shiva &middot; Ganesha &middot; Hanuman &middot; Durga &middot; Kali</span>Las l&aacute;grimas de Shiva: protegen, centran la mente y fortalecen la constancia en la pr&aacute;ctica.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Tulsi">Tulsi<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Vishnu &middot; Krishna &middot; Rama &middot; Hanuman</span>La planta sagrada de la devoci&oacute;n: purifica el coraz&oacute;n y abre el camino del amor divino.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Sandalo Rojo">S&aacute;ndalo Rojo<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Ganesha &middot; Lakshmi &middot; Durga</span>Enciende la energ&iacute;a y el coraje, y atrae la fuerza protectora y la prosperidad de la Diosa.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Bodhi">Bodhi<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Buda</span>Semilla del &aacute;rbol del despertar: sostiene la meditaci&oacute;n, la compasi&oacute;n y la claridad interior.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Sandalo Blanco">S&aacute;ndalo Blanco<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Vishnu</span>Su aroma fresco serena la mente y favorece la pureza, la paz y la concentraci&oacute;n.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Semillas de Loto">Semillas de Loto<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Lakshmi</span>Como el loto que florece sobre el barro, despierta la pureza, la abundancia y el crecimiento espiritual.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Hueso">Hueso<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Kali</span>Recuerda la impermanencia de la vida y acompa&ntilde;a las pr&aacute;cticas de desapego, transformaci&oacute;n y protecci&oacute;n.</span></div>' +
+            '<div class="jp-deidad-item" data-mala="Sphatik">Sphatik (cuarzo)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Sarasvati &middot; Lakshmi</span>Calma el estr&eacute;s, la ansiedad y la ira; favorece la paz, la sanaci&oacute;n, la concentraci&oacute;n y el buen descanso.</span></div>' +
+            '</div></div>' +
+            '<div class="jp-mala-group">' +
+            '<div class="jp-mala-group-title">Malas de planetas<span class="jp-mala-group-arrow">&#9662;</span></div>' +
+            '<div class="jp-mala-group-list">' +
             '<div class="jp-deidad-item" data-mala="Rubi">Rub&iacute; (Manikya)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Surya (Sol)</span>Despierta el fuego interior, la vitalidad pura y la luz de la soberan&iacute;a personal.</span></div>' +
             '<div class="jp-deidad-item" data-mala="Perla">Perla (Moti)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Chandra (Luna)</span>Aquieta las mareas emocionales y aporta calma, intuici&oacute;n y serenidad a la mente.</span></div>' +
             '<div class="jp-deidad-item" data-mala="Coral Rojo">Coral Rojo (Moonga)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Mangal (Marte)</span>Transforma el impulso en coraje, enfoque y voluntad inquebrantable para vencer los obst&aacute;culos.</span></div>' +
@@ -1287,6 +1311,7 @@ window.DISC_PAGES_B64 = {
             '<div class="jp-deidad-item" data-mala="Zafiro Azul">Zafiro Azul (Neelam)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Shani (Saturno)</span>Ense&ntilde;a la paciencia, la disciplina sagrada y la fortaleza para trascender toda prueba.</span></div>' +
             '<div class="jp-deidad-item" data-mala="Hessonita">Hessonita (Gomedh)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Rahu (Nodo Norte)</span>Disuelve la ilusi&oacute;n y el apego, transformando la confusi&oacute;n en visi&oacute;n trascendente.</span></div>' +
             '<div class="jp-deidad-item" data-mala="Ojo de Gato">Ojo de Gato (Lahsunya)<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc"><span class="jp-mala-planeta">Ketu (Nodo Sur)</span>Abre la percepci&oacute;n sutil y la intuici&oacute;n profunda que conducen a la liberaci&oacute;n interior.</span></div>' +
+            '</div></div>' +
           '</div>' +
         '</div>' +
         '<div class="jp-dropdown-container">' +
@@ -1488,6 +1513,14 @@ window.DISC_PAGES_B64 = {
     malaMenu.classList.toggle('jp-hidden');
   });
   malaMenu.addEventListener('click', function(e) { e.stopPropagation(); });
+  var malaGroups = malaMenu.querySelectorAll('.jp-mala-group');
+  malaGroups.forEach(function(group) {
+    group.querySelector('.jp-mala-group-title').addEventListener('click', function() {
+      var wasOpen = group.classList.contains('jp-group-open');
+      malaGroups.forEach(function(g) { g.classList.remove('jp-group-open'); });
+      if (!wasOpen) group.classList.add('jp-group-open');
+    });
+  });
   var malaItems = malaMenu.querySelectorAll('.jp-deidad-item');
   malaItems.forEach(function(item) {
     item.addEventListener('click', function(ev) {
