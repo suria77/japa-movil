@@ -139,7 +139,7 @@ window.DISC_PAGES_B64 = {
       left: 6px;
     }
     .jp-page {
-      padding-top: 340px;
+      padding-top: 300px;
     }
   }
 
@@ -305,6 +305,12 @@ window.DISC_PAGES_B64 = {
     text-align: left;
   }
   .jp-btn-label { white-space: nowrap; }
+  .jp-btn-caret {
+    margin-left: auto;
+    padding-left: 10px;
+    font-size: 1.15em;
+    line-height: 1;
+  }
   /* Tutorial: es una ayuda, no una opcion de practica; mas discreto y separado */
   .jp-btn-tutorial {
     font-size: 11px;
@@ -1016,6 +1022,73 @@ window.DISC_PAGES_B64 = {
     color: #FFFFFF !important;
   }
 
+  /* --- Modal del tutorial (video) --- */
+  .jp-tutorial-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+  }
+  .jp-tutorial-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    max-height: 92vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .jp-tutorial-modal-content video {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+    border-radius: 12px;
+    background: #000;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  /* --- Visor de rituales (paginas del PDF como imagenes) --- */
+  .jp-ritual-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: #0b0710;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .jp-ritual-modal .jp-modal-close { position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); }
+  .jp-ritual-pages {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: calc(64px + env(safe-area-inset-top, 0px)) 0 40px;
+  }
+  .jp-ritual-pages img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0 auto 10px;
+  }
+  .jp-ritual-sub {
+    display: block;
+    margin-top: 2px;
+    font-size: 11.5px;
+    font-weight: 400;
+    color: var(--jp-muted);
+  }
+  .jp-mantra-sub {
+    display: block;
+    color: var(--jp-violet);
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
   /* --- Modal de reproductor de disco (muestra de tienda) --- */
   .jp-disc-modal {
     position: fixed;
@@ -1217,8 +1290,15 @@ window.DISC_PAGES_B64 = {
      (por ejemplo 'Surya': 'img/surya.png'). Mientras este vacia, al elegir
      el planeta se mantiene la imagen de deidad que hubiera. */
   var planetasImages = {
-    'Surya': '', 'Chandra': '', 'Mangal': '', 'Budha': '', 'Guru': '',
-    'Shukra': '', 'Shani': '', 'Rahu': '', 'Ketu': ''
+    'Surya': 'img_deitades_planetas/surya.png',
+    'Chandra': 'img_deitades_planetas/chandra.png',
+    'Mangal': 'img_deitades_planetas/mangala.png',
+    'Budha': 'img_deitades_planetas/budha.png',
+    'Guru': 'img_deitades_planetas/guru.png',
+    'Shukra': 'img_deitades_planetas/shukra.png',
+    'Shani': 'img_deitades_planetas/shani.png',
+    'Rahu': 'img_deitades_planetas/rahu.png',
+    'Ketu': 'img_deitades_planetas/ketu.png'
   };
 
   var MANTRAS = [
@@ -1318,7 +1398,7 @@ window.DISC_PAGES_B64 = {
       '</div>' +
       '<div class="jp-top-tabs" id="jp-top-tabs">' +
         '<div class="jp-dropdown-container">' +
-          '<button class="jp-top-btn jp-btn-deidad" id="jp-btn-deidad"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4c2 2.5 2 5.5 0 8-2-2.5-2-5.5 0-8z"/><path d="M12 12c-.5-3 1.5-5.5 5-6-.2 3.2-2 5.4-5 6z"/><path d="M12 12c.5-3-1.5-5.5-5-6 .2 3.2 2 5.4 5 6z"/><path d="M5 13c4 0 6 2 7 5 1-3 3-5 7-5-1 4-4 7-7 7s-6-3-7-7z"/></svg><span class="jp-btn-label">ELIGE DEIDAD &#9662;</span></button>' +
+          '<button class="jp-top-btn jp-btn-deidad" id="jp-btn-deidad"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4c2 2.5 2 5.5 0 8-2-2.5-2-5.5 0-8z"/><path d="M12 12c-.5-3 1.5-5.5 5-6-.2 3.2-2 5.4-5 6z"/><path d="M12 12c.5-3-1.5-5.5-5-6 .2 3.2 2 5.4 5 6z"/><path d="M5 13c4 0 6 2 7 5 1-3 3-5 7-5-1 4-4 7-7 7s-6-3-7-7z"/></svg><span class="jp-btn-label">ELIGE DEIDAD</span><span class="jp-btn-caret">&#9662;</span></button>' +
           '<div class="jp-dropdown-menu jp-hidden" id="jp-deidad-menu">' +
             '<div class="jp-deidad-item" data-name="Ganesha">Ganesha<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El que elimina los obst&aacute;culos: trae claridad, buenos comienzos, sabidur&iacute;a y &eacute;xito en cada empresa.<span class="jp-deidad-malas-line"><b>Malas:</b> S&aacute;ndalo Rojo, Rudraksha</span></span></div>' +
             '<div class="jp-deidad-item" data-name="Shiva">Shiva<span class="jp-mala-info">&#9662;</span><span class="jp-mala-desc">El gran yogui: transforma lo viejo, aquieta la mente y conduce a la meditaci&oacute;n profunda y la liberaci&oacute;n.<span class="jp-deidad-malas-line"><b>Malas:</b> Rudraksha</span></span></div>' +
@@ -1346,7 +1426,7 @@ window.DISC_PAGES_B64 = {
           '</div>' +
         '</div>' +
         '<div class="jp-dropdown-container">' +
-          '<button class="jp-top-btn jp-btn-mala" id="jp-btn-mala"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.7"/><circle cx="17.7" cy="7" r="1.7"/><circle cx="19.5" cy="12.5" r="1.7"/><circle cx="17" cy="18" r="1.7"/><circle cx="12" cy="20" r="1.7"/><circle cx="7" cy="18" r="1.7"/><circle cx="4.5" cy="12.5" r="1.7"/><circle cx="6.3" cy="7" r="1.7"/></svg><span class="jp-btn-label">ELIGE MALA &#9662;</span></button>' +
+          '<button class="jp-top-btn jp-btn-mala" id="jp-btn-mala"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.7"/><circle cx="17.7" cy="7" r="1.7"/><circle cx="19.5" cy="12.5" r="1.7"/><circle cx="17" cy="18" r="1.7"/><circle cx="12" cy="20" r="1.7"/><circle cx="7" cy="18" r="1.7"/><circle cx="4.5" cy="12.5" r="1.7"/><circle cx="6.3" cy="7" r="1.7"/></svg><span class="jp-btn-label">ELIGE MALA</span><span class="jp-btn-caret">&#9662;</span></button>' +
           '<div class="jp-dropdown-menu jp-hidden" id="jp-mala-menu">' +
             '<div class="jp-mala-group">' +
             '<div class="jp-mala-group-title">Malas de deidades<span class="jp-mala-group-arrow">&#9662;</span></div>' +
@@ -1376,11 +1456,11 @@ window.DISC_PAGES_B64 = {
           '</div>' +
         '</div>' +
         '<div class="jp-dropdown-container">' +
-          '<button class="jp-top-btn jp-btn-mantra" id="jp-btn-mantra"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v4"/><path d="M8 7v10"/><path d="M12 4v16"/><path d="M16 8v8"/><path d="M20 10.5v3"/></svg><span class="jp-btn-label">ELIGE MANTRA &#9662;</span></button>' +
+          '<button class="jp-top-btn jp-btn-mantra" id="jp-btn-mantra"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v4"/><path d="M8 7v10"/><path d="M12 4v16"/><path d="M16 8v8"/><path d="M20 10.5v3"/></svg><span class="jp-btn-label">ELIGE MANTRA</span><span class="jp-btn-caret">&#9662;</span></button>' +
           '<div class="jp-dropdown-menu jp-mantra-menu jp-hidden" id="jp-mantra-menu"></div>' +
         '</div>' +
         '<div class="jp-dropdown-container">' +
-          '<button class="jp-top-btn jp-btn-audios" id="jp-btn-audios"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg><span class="jp-btn-label">FONDO &#9662;</span></button>' +
+          '<button class="jp-top-btn jp-btn-audios" id="jp-btn-audios"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg><span class="jp-btn-label">FONDO</span><span class="jp-btn-caret">&#9662;</span></button>' +
           '<div class="jp-dropdown-menu jp-hidden" id="jp-audios-menu">' +
             '<div class="jp-audio-player">' +
               '<div class="jp-audio-header">' +
@@ -1429,15 +1509,25 @@ window.DISC_PAGES_B64 = {
             '</div>' +
           '</div>' +
         '</div>' +
-        '<button class="jp-top-btn jp-btn-rituales" id="jp-btn-rituales"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.5 1 2 2 2-.5-3 .2-5.5 1-8z"/></svg><span class="jp-btn-label">RITUALES</span></button>' +
+        '<div class="jp-dropdown-container" id="jp-rituales-container">' +
+          '<button class="jp-top-btn jp-btn-rituales" id="jp-btn-rituales"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.5 1 2 2 2-.5-3 .2-5.5 1-8z"/></svg><span class="jp-btn-label">RITUALES</span><span class="jp-btn-caret">&#9662;</span></button>' +
+          '<div class="jp-dropdown-menu jp-hidden" id="jp-rituales-menu">' +
+            '<div class="jp-deidad-item jp-ritual-item" data-ritual="ganesha">Ganesha<span class="jp-ritual-sub">Rituales de Ganesha</span></div>' +
+            '<div class="jp-deidad-item jp-ritual-item" data-ritual="shiva">Shiva<span class="jp-ritual-sub">5 rituales de Shiva</span></div>' +
+            '<div class="jp-deidad-item jp-ritual-item" data-ritual="lakshmi">Lakshmi<span class="jp-ritual-sub">Los 9 rituales de Lakshmi</span></div>' +
+            '<div class="jp-deidad-item jp-ritual-item" data-ritual="hanuman">Hanuman<span class="jp-ritual-sub">3 rituales de Hanuman</span></div>' +
+            '<div class="jp-deidad-item jp-ritual-item" data-ritual="durga">Durga<span class="jp-ritual-sub">Rituales de Durga</span></div>' +
+            '<div class="jp-deidad-item jp-ritual-item" data-ritual="kali">Kali<span class="jp-ritual-sub">Rituales de Kali</span></div>' +
+          '</div>' +
+        '</div>' +
         '<button class="jp-top-btn jp-btn-tutorial" id="jp-btn-tutorial"><span class="jp-btn-label">? TUTORIAL</span></button>' +
       '</div>' +
       '<img class="jp-title-img" src="img/File-2026-08-20-14-40-09.png" alt="Japa-Móvil" />' +
-      '<p class="jp-subtitle" id="jp-subtitle">Contar por detecci&oacute;n de voz.</p>' +
+      '<p class="jp-subtitle" id="jp-subtitle">Toca cualquier lugar de la pantalla para contabilizar cada repetici&oacute;n.</p>' +
       '<div class="jp-mode-switch" id="jp-mode-switch">' +
-        '<button class="jp-mode-btn jp-mode-active" id="jp-mode-speech">Contar por voz</button>' +
+        '<button class="jp-mode-btn jp-mode-active" id="jp-mode-manual">Contar a mano</button>' +
+        '<button class="jp-mode-btn" id="jp-mode-speech">Contar por voz</button>' +
         '<button class="jp-mode-btn" id="jp-mode-auto">Grabar y repetir</button>' +
-        '<button class="jp-mode-btn" id="jp-mode-manual">Contar a mano</button>' +
       '</div>' +
       '<div class="jp-target-switch" id="jp-target-switch">' +
         '<button class="jp-target-btn-static" id="jp-target-btn">108 Repeticiones</button>' +
@@ -1459,7 +1549,7 @@ window.DISC_PAGES_B64 = {
         '</div>' +
       '</div>' +
       '<div class="jp-error jp-hidden" id="jp-error"></div>' +
-      '<div class="jp-controls" id="jp-speech-controls">' +
+      '<div class="jp-controls jp-hidden" id="jp-speech-controls">' +
         '<button class="jp-btn jp-btn-primary" id="jp-btn-start">Iniciar Escucha</button>' +
         '<div class="jp-btn-row jp-hidden" id="jp-speech-action-row">' +
           '<button class="jp-btn jp-btn-ghost" id="jp-btn-pause-speech">PAUSAR</button>' +
@@ -1475,7 +1565,7 @@ window.DISC_PAGES_B64 = {
           '<button class="jp-btn jp-btn-stop" id="jp-btn-stop-auto">DETENER</button>' +
         '</div>' +
       '</div>' +
-      '<div class="jp-controls jp-hidden" id="jp-manual-controls">' +
+      '<div class="jp-controls" id="jp-manual-controls">' +
         '<p class="jp-manual-msg">Para comenzar, bloquea y pulsa en cualquier parte de la pantalla.</p>' +
         '<button class="jp-btn jp-btn-primary" id="jp-btn-lock">Bloquear Pantalla</button>' +
         '<div class="jp-btn-row jp-hidden" id="jp-manual-action-row">' +
@@ -1630,12 +1720,30 @@ window.DISC_PAGES_B64 = {
   });
 
   /* --- Desplegable "ELIGE MANTRA" (acordeon con reproductor) --- */
+  var MANTRAS_PLANETAS = [
+    { name: 'Surya (Sol)', desc: '<span class="jp-mantra-sub">Mantra: Om Suryaya Namaha</span>Da vitalidad, autoestima, liderazgo, claridad, fortalece el alma y la relaci&oacute;n con el padre.', audio: 'mantras_planetas/surya_sol.mp3' },
+    { name: 'Chandra (Luna)', desc: '<span class="jp-mantra-sub">Mantra: Om Chandraya Namaha</span>Calma la mente, equilibra emociones, reduce ansiedad, mejora el sue&ntilde;o y la intuici&oacute;n.', audio: 'mantras_planetas/chandra_luna.mp3' },
+    { name: 'Mangala (Marte)', desc: '<span class="jp-mantra-sub">Mantra: Om Mangalaya Namaha</span>Da coraje, energ&iacute;a, fuerza de voluntad, disciplina, quita miedos y pereza.', audio: 'mantras_planetas/mangala_marte.mp3' },
+    { name: 'Budha (Mercurio)', desc: '<span class="jp-mantra-sub">Mantra: Om Budhaya Namaha</span>Potencia inteligencia, memoria, comunicaci&oacute;n, aprendizaje y negocios.', audio: 'mantras_planetas/budha_mercurio.mp3' },
+    { name: 'Guru (J&uacute;piter)', desc: '<span class="jp-mantra-sub">Mantra: Om Gurave Namaha</span>Atrae sabidur&iacute;a, suerte, prosperidad, dharma, protege a los hijos y trae buenos maestros.', audio: 'mantras_planetas/guru_brihaspati_jupiter.mp3' },
+    { name: 'Shukra (Venus)', desc: '<span class="jp-mantra-sub">Mantra: Om Shukraya Namaha</span>Atrae amor, belleza, armon&iacute;a en pareja, creatividad y abundancia material.', audio: 'mantras_planetas/shukra_venus.mp3' },
+    { name: 'Shani (Saturno)', desc: '<span class="jp-mantra-sub">Mantra: Om Shanaischaraya Namaha</span>Da paciencia, responsabilidad, quita karma negativo, protege en tiempos dif&iacute;ciles, trae estabilidad.', audio: 'mantras_planetas/shani_saturno.mp3' },
+    { name: 'Rahu (Nodo Norte)', desc: '<span class="jp-mantra-sub">Mantra: Om Rahave Namaha</span>Quita confusi&oacute;n e ilusi&oacute;n, protege de energ&iacute;as negativas, ayuda a cumplir ambiciones materiales y en lo extranjero.', audio: 'mantras_planetas/rahu.mp3' },
+    { name: 'Ketu (Nodo Sur)', desc: '<span class="jp-mantra-sub">Mantra: Om Ketave Namaha</span>Da desapego, intuici&oacute;n, conexi&oacute;n espiritual, liberaci&oacute;n (moksha) y corta patrones del pasado.', audio: 'mantras_planetas/ketu.mp3' }
+  ];
+  var MANTRAS_ALL = MANTRAS.concat(MANTRAS_PLANETAS);
+
   var mantraAudioObj = new Audio();
   var mantraPlayingIdx = null;
 
   function buildMantraMenu() {
     var html = '';
-    MANTRAS.forEach(function(m, idx) {
+    MANTRAS_ALL.forEach(function(m, idx) {
+      if (idx === MANTRAS.length) {
+        html += '<div class="jp-mala-group jp-planet-group" id="jp-mantra-planet-group">' +
+                  '<div class="jp-mala-group-title"><span class="jp-planet-sym">&#9737;</span>Planetas<span class="jp-mala-group-arrow">&#9662;</span></div>' +
+                  '<div class="jp-mala-group-list">';
+      }
       html +=
         '<div class="jp-mantra-item" data-idx="' + idx + '">' +
           '<div class="jp-mantra-header">' +
@@ -1643,12 +1751,21 @@ window.DISC_PAGES_B64 = {
             '<span class="jp-mantra-arrow">&#9662;</span>' +
           '</div>' +
           '<div class="jp-mantra-body jp-hidden">' +
-            '<p class="jp-mantra-desc">' + m.desc + '</p>' +
+            '<div class="jp-mantra-desc">' + m.desc + '</div>' +
             '<button class="jp-mantra-play" data-idx="' + idx + '">&#9654;</button>' +
           '</div>' +
         '</div>';
     });
+    if (MANTRAS_PLANETAS.length) html += '</div></div>';
     mantraMenu.innerHTML = html;
+
+    var mantraPlanetGroup = document.getElementById('jp-mantra-planet-group');
+    if (mantraPlanetGroup) {
+      mantraPlanetGroup.querySelector('.jp-mala-group-title').addEventListener('click', function(e) {
+        e.stopPropagation();
+        mantraPlanetGroup.classList.toggle('jp-group-open');
+      });
+    }
 
     var mantraItems = mantraMenu.querySelectorAll('.jp-mantra-item');
     mantraItems.forEach(function(item) {
@@ -1679,7 +1796,7 @@ window.DISC_PAGES_B64 = {
           return;
         }
         mantraPlayBtns.forEach(function(b) { b.innerHTML = '&#9654;'; });
-        mantraAudioObj.src = MANTRAS[idx].audio;
+        mantraAudioObj.src = MANTRAS_ALL[idx].audio;
         mantraAudioObj.currentTime = 0;
         mantraAudioObj.play().catch(function(err) { console.log(err); });
         btn.innerHTML = '&#10074;&#10074;';
@@ -1864,6 +1981,52 @@ window.DISC_PAGES_B64 = {
     btnPazStop.click();
     btnCosmosStop.click();
   }
+
+  /* --- RITUALES: desplegable y visor de paginas --- */
+  var RITUAL_PAGES = {'ganesha': 14, 'shiva': 7, 'lakshmi': 10, 'hanuman': 4, 'durga': 3, 'kali': 7};
+  var btnRituales = document.getElementById('jp-btn-rituales');
+  var ritualesMenu = document.getElementById('jp-rituales-menu');
+  btnRituales.addEventListener('click', function(e) {
+    e.stopPropagation();
+    deidadMenu.classList.add('jp-hidden');
+    malaMenu.classList.add('jp-hidden');
+    mantraMenu.classList.add('jp-hidden');
+    audiosMenu.classList.add('jp-hidden');
+    ritualesMenu.classList.toggle('jp-hidden');
+  });
+  ritualesMenu.addEventListener('click', function(e) { e.stopPropagation(); });
+  /* Cierra el menu de rituales al pulsar en cualquier otro sitio (incluidos otros botones) */
+  document.addEventListener('click', function(e) {
+    var cont = document.getElementById('jp-rituales-container');
+    if (cont && !cont.contains(e.target)) ritualesMenu.classList.add('jp-hidden');
+  }, true);
+
+  function openRitual(slug) {
+    var n = RITUAL_PAGES[slug] || 0;
+    var imgs = '';
+    for (var i = 1; i <= n; i++) {
+      var num = (i < 10 ? '0' : '') + i;
+      imgs += '<img src="rituales/' + slug + '-' + num + '.jpg" alt="P&aacute;gina ' + i + '" loading="' + (i <= 2 ? 'eager' : 'lazy') + '">';
+    }
+    var overlay = document.createElement('div');
+    overlay.className = 'jp-ritual-modal';
+    overlay.innerHTML =
+      '<button class="jp-modal-close" aria-label="Cerrar"><span class="jp-modal-close-x">&times;</span> Cerrar</button>' +
+      '<div class="jp-ritual-pages">' + imgs + '</div>';
+    document.body.appendChild(overlay);
+    overlay.querySelector('.jp-modal-close').addEventListener('click', function(e) {
+      e.stopPropagation();
+      overlay.remove();
+    });
+    overlay.addEventListener('click', function(e) { e.stopPropagation(); });
+  }
+  ritualesMenu.querySelectorAll('.jp-ritual-item').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      e.stopPropagation();
+      ritualesMenu.classList.add('jp-hidden');
+      openRitual(item.getAttribute('data-ritual'));
+    });
+  });
 
   document.getElementById('jp-btn-tutorial').addEventListener('click', function() {
     var overlay = document.createElement('div');
