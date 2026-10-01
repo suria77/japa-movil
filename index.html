@@ -2454,6 +2454,16 @@ window.DISC_PAGES_B64 = {
     });
   }
 
+  /* Pregunta al servidor si este movil tiene una sesion guardada (cookie jp_sess).
+     Si no responde en 4 segundos (sin conexion, etc.), se muestra el login. */
+  function recoverFromServer() {
+    var timeout = new Promise(function (resolve) { setTimeout(function () { resolve(null); }, 4000); });
+    var req = fetch('/api/session', { method: 'GET', credentials: 'same-origin', cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; });
+    return Promise.race([req, timeout]);
+  }
+
   /* --- Arranque --- */
   var quickRaw = Store.getSync(LICENSE_STORAGE_KEY);
   var quickSession = quickRaw ? parseSession(quickRaw) : null;
@@ -2472,9 +2482,24 @@ window.DISC_PAGES_B64 = {
       if (recovered) {
         requestPersistence();
         showApp();
-      } else {
-        startLogin();
+        return;
       }
+      /* Ultimo recurso: la cookie que guarda el servidor al entrar con la licencia */
+      return recoverFromServer().then(function (d) {
+        if (d && d.valid) {
+          Store.set(LICENSE_STORAGE_KEY, JSON.stringify({
+            valid: true,
+            email: d.email || '',
+            verified_at: Date.now()
+          }));
+          if (d.email) Store.set(LAST_EMAIL_KEY, d.email);
+          if (d.device_id) Store.set(DEVICE_ID_KEY, d.device_id);
+          requestPersistence();
+          showApp();
+        } else {
+          startLogin();
+        }
+      });
     }).catch(function () { startLogin(); });
   }
 })();
