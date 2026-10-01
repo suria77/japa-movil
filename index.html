@@ -6,6 +6,12 @@
 <title>Japa-Móvil</title>
 <link rel="icon" type="image/png" href="img/icon.png">
 <link rel="apple-touch-icon" href="img/icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Japa-Móvil">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#000000">
 <style>html,body{margin:0;padding:0;background:#000;}</style>
 </head>
 <body style="margin:0;padding:0;background:#000;">
@@ -2226,33 +2232,131 @@ window.DISC_PAGES_B64 = {
 
   /* --- Acceso por licencia (Payhip) --- */
   var LICENSE_STORAGE_KEY = 'jp_license_session';
+  var DEVICE_ID_KEY = 'jp_device_id';
+  var LAST_EMAIL_KEY = 'jp_last_email';
 
-  function getStoredSession() {
+  /* Almacenamiento triple y redundante: localStorage + cookie + IndexedDB.
+     iOS a veces borra uno de ellos; si queda alguno, se recupera la sesion
+     y se vuelve a copiar en los demas (se "autocura"). */
+  var Store = (function () {
+    var IDB_NAME = 'jp_store';
+    var IDB_STORE = 'kv';
+    var ONE_YEAR = 60 * 60 * 24 * 365;
+
+    function withTimeout(promise, ms, fallback) {
+      return new Promise(function (resolve) {
+        var done = false;
+        var t = setTimeout(function () { if (!done) { done = true; resolve(fallback); } }, ms);
+        promise.then(function (v) {
+          if (!done) { done = true; clearTimeout(t); resolve(v); }
+        }, function () {
+          if (!done) { done = true; clearTimeout(t); resolve(fallback); }
+        });
+      });
+    }
+
+    function idbOpen() {
+      return new Promise(function (resolve, reject) {
+        try {
+          var req = indexedDB.open(IDB_NAME, 1);
+          req.onupgradeneeded = function () { req.result.createObjectStore(IDB_STORE); };
+          req.onsuccess = function () { resolve(req.result); };
+          req.onerror = function () { reject(req.error); };
+        } catch (err) { reject(err); }
+      });
+    }
+    function idbGet(key) {
+      return withTimeout(idbOpen().then(function (db) {
+        return new Promise(function (resolve) {
+          try {
+            var r = db.transaction(IDB_STORE, 'readonly').objectStore(IDB_STORE).get(key);
+            r.onsuccess = function () { resolve(r.result || null); };
+            r.onerror = function () { resolve(null); };
+          } catch (err) { resolve(null); }
+        });
+      }), 1500, null);
+    }
+    function idbSet(key, value) {
+      return withTimeout(idbOpen().then(function (db) {
+        return new Promise(function (resolve) {
+          try {
+            var tx = db.transaction(IDB_STORE, 'readwrite');
+            tx.objectStore(IDB_STORE).put(value, key);
+            tx.oncomplete = function () { resolve(true); };
+            tx.onerror = function () { resolve(false); };
+          } catch (err) { resolve(false); }
+        });
+      }), 1500, false);
+    }
+
+    function lsGet(key) { try { return localStorage.getItem(key); } catch (err) { return null; } }
+    function lsSet(key, value) { try { localStorage.setItem(key, value); } catch (err) {} }
+    function ckGet(key) {
+      try {
+        var m = document.cookie.match(new RegExp('(?:^|; )' + key + '=([^;]*)'));
+        return m ? decodeURIComponent(m[1]) : null;
+      } catch (err) { return null; }
+    }
+    function ckSet(key, value) {
+      try {
+        document.cookie = key + '=' + encodeURIComponent(value) +
+          '; max-age=' + ONE_YEAR + '; path=/; SameSite=Lax' +
+          (location.protocol === 'https:' ? '; Secure' : '');
+      } catch (err) {}
+    }
+
+    function set(key, value) {
+      lsSet(key, value);
+      ckSet(key, value);
+      idbSet(key, value);
+    }
+    function getSync(key) { return lsGet(key) || ckGet(key); }
+    function get(key) {
+      var quick = getSync(key);
+      if (quick) { set(key, quick); return Promise.resolve(quick); }
+      return idbGet(key).then(function (v) {
+        if (v) set(key, v);
+        return v;
+      });
+    }
+    return { get: get, set: set, getSync: getSync };
+  })();
+
+  /* Pide al navegador que NO borre los datos de la app por falta de uso */
+  function requestPersistence() {
     try {
-      var raw = localStorage.getItem(LICENSE_STORAGE_KEY);
-      if (!raw) return null;
+      if (navigator.storage && navigator.storage.persist) {
+        var p = navigator.storage.persist();
+        if (p && p.catch) p.catch(function () {});
+      }
+    } catch (err) {}
+  }
+
+  function parseSession(raw) {
+    try {
       var parsed = JSON.parse(raw);
-      if (parsed && parsed.valid) return parsed;
-      return null;
-    } catch (e) {
+      return (parsed && parsed.valid) ? parsed : null;
+    } catch (err) {
       return null;
     }
   }
 
-  var DEVICE_ID_KEY = 'jp_device_id';
+  function newDeviceId() {
+    return (window.crypto && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : 'dev-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+  }
 
+  /* El identificador del dispositivo tambien se guarda por triplicado:
+     asi, aunque se borre la sesion, el servidor sigue reconociendo el
+     mismo dispositivo y no gasta una de las 2 plazas de la licencia. */
   function getDeviceId() {
-    try {
-      var existing = localStorage.getItem(DEVICE_ID_KEY);
+    return Store.get(DEVICE_ID_KEY).then(function (existing) {
       if (existing) return existing;
-      var fresh = (window.crypto && crypto.randomUUID)
-        ? crypto.randomUUID()
-        : 'dev-' + Date.now() + '-' + Math.random().toString(36).slice(2);
-      localStorage.setItem(DEVICE_ID_KEY, fresh);
+      var fresh = newDeviceId();
+      Store.set(DEVICE_ID_KEY, fresh);
       return fresh;
-    } catch (e) {
-      return 'dev-' + Date.now() + '-' + Math.random().toString(36).slice(2);
-    }
+    });
   }
 
   function showApp() {
@@ -2261,15 +2365,19 @@ window.DISC_PAGES_B64 = {
     initJapaApp();
   }
 
-  var existingSession = getStoredSession();
-  if (existingSession) {
-    showApp();
-  } else {
+  function startLogin() {
     var gate = document.getElementById('jp-login-gate');
     var emailInput = document.getElementById('jp-login-email');
     var keyInput = document.getElementById('jp-login-key');
     var submitBtn = document.getElementById('jp-login-submit');
     var errorBox = document.getElementById('jp-login-error');
+
+    gate.style.visibility = '';
+
+    /* Si ya entro alguna vez, el correo aparece escrito */
+    Store.get(LAST_EMAIL_KEY).then(function (saved) {
+      if (saved && !emailInput.value) emailInput.value = saved;
+    });
 
     function showLoginError(msg) {
       errorBox.textContent = msg;
@@ -2290,28 +2398,31 @@ window.DISC_PAGES_B64 = {
       submitBtn.disabled = true;
       submitBtn.textContent = 'Comprobando...';
 
-      fetch('/api/verify-license', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: email,
-          license_key: licenseKey,
-          device_id: getDeviceId(),
-          confirm_release: !!confirmRelease
+      getDeviceId()
+        .then(function (deviceId) {
+          return fetch('/api/verify-license', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: email,
+              license_key: licenseKey,
+              device_id: deviceId,
+              confirm_release: !!confirmRelease
+            })
+          });
         })
-      })
         .then(function (r) { return r.json(); })
         .then(function (data) {
           submitBtn.disabled = false;
           submitBtn.textContent = 'Entrar';
           if (data && data.valid) {
-            try {
-              localStorage.setItem(LICENSE_STORAGE_KEY, JSON.stringify({
-                valid: true,
-                email: email,
-                verified_at: Date.now()
-              }));
-            } catch (e) {}
+            Store.set(LICENSE_STORAGE_KEY, JSON.stringify({
+              valid: true,
+              email: email,
+              verified_at: Date.now()
+            }));
+            Store.set(LAST_EMAIL_KEY, email);
+            requestPersistence();
             showApp();
           } else if (data && data.needs_release) {
             errorBox.textContent = data.message || '';
@@ -2341,6 +2452,30 @@ window.DISC_PAGES_B64 = {
     keyInput.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') attemptLogin(false);
     });
+  }
+
+  /* --- Arranque --- */
+  var quickRaw = Store.getSync(LICENSE_STORAGE_KEY);
+  var quickSession = quickRaw ? parseSession(quickRaw) : null;
+
+  if (quickSession) {
+    /* Camino rápido: sesión encontrada al instante */
+    Store.set(LICENSE_STORAGE_KEY, quickRaw);
+    requestPersistence();
+    showApp();
+  } else {
+    /* Antes de enseñar el login, intentamos recuperar la sesión de IndexedDB */
+    var gateEl = document.getElementById('jp-login-gate');
+    gateEl.style.visibility = 'hidden';
+    Store.get(LICENSE_STORAGE_KEY).then(function (raw) {
+      var recovered = raw ? parseSession(raw) : null;
+      if (recovered) {
+        requestPersistence();
+        showApp();
+      } else {
+        startLogin();
+      }
+    }).catch(function () { startLogin(); });
   }
 })();
 </script>
