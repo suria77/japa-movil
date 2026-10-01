@@ -12,8 +12,16 @@
 // vía su API REST (variables de entorno UPSTASH_REDIS_REST_URL y UPSTASH_REDIS_REST_TOKEN,
 // configuradas en Cloudflare Pages > Settings > Environment variables).
 // Máximo 2 dispositivos por licencia.
+//
+// Sesión de respaldo: cuando la licencia es válida, se crea un código de sesión al azar,
+// se guarda en Upstash (session:<codigo>, caduca en 1 año) y se envía al navegador como
+// cookie del servidor (HttpOnly). Safari respeta estas cookies mucho más que los datos que
+// guarda la propia página. Si el móvil pierde la sesión, la app la recupera llamando a
+// /api/session (ver session.js). No necesita ninguna clave secreta nueva.
 
 const MAX_DEVICES = 2;
+const SESSION_COOKIE = 'jp_sess';
+const SESSION_MAX_AGE = 60 * 60 * 24 * 365; // 1 año, en segundos
 
 async function kvCommand(env, command) {
   const url = env.UPSTASH_REDIS_REST_URL;
@@ -48,11 +56,20 @@ async function kvSet(env, key, value) {
   await kvCommand(env, ['SET', key, JSON.stringify(value)]);
 }
 
-function json(status, body) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json' }
-  });
+async function kvSetExpiring(env, key, value, seconds) {
+  await kvCommand(env, ['SET', key, JSON.stringify(value), 'EX', String(seconds)]);
+}
+
+function newSessionToken() {
+  return crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '');
+}
+
+function json(status, body, extraHeaders) {
+  const headers = new Headers({ 'Content-Type': 'application/json' });
+  if (extraHeaders) {
+    for (const k in extraHeaders) headers.append(k, extraHeaders[k]);
+  }
+  return new Response(JSON.stringify(body), { status, headers });
 }
 
 // Cloudflare Pages Functions: este nombre especial captura POST a /api/verify-license
@@ -142,7 +159,26 @@ export async function onRequestPost(context) {
       await kvSet(env, deviceKey, devices);
     }
 
-    return json(200, { valid: true, message: 'Acceso concedido.' });
+    // --- Sesión de respaldo en el servidor ---
+    // Si algo falla aquí, el acceso se concede igualmente (solo se pierde el respaldo).
+    let cookieHeaders = null;
+    try {
+      const token = newSessionToken();
+      await kvSetExpiring(env, 'session:' + token, {
+        email: enteredEmail,
+        license_key: String(license_key).trim(),
+        device_id: thisDevice,
+        created_at: Date.now()
+      }, SESSION_MAX_AGE);
+      cookieHeaders = {
+        'Set-Cookie': SESSION_COOKIE + '=' + token +
+          '; Max-Age=' + SESSION_MAX_AGE + '; Path=/; HttpOnly; Secure; SameSite=Lax'
+      };
+    } catch (e) {
+      cookieHeaders = null;
+    }
+
+    return json(200, { valid: true, message: 'Acceso concedido.' }, cookieHeaders);
   } catch (err) {
     return json(500, { valid: false, message: 'DEPURACIÓN — Error: ' + err.message });
   }
