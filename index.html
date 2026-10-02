@@ -1526,6 +1526,107 @@ window.DISC_PAGES_B64 = {
     .jp-help-panel { animation: none; }
     .jp-help-card, .jp-help-seg button { transition: none; }
   }
+
+  /* --- Icono de compartir junto al botón TUTORIAL E INSTALACIÓN (misma fila, no añade altura) --- */
+  .jp-top-extra {
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+    gap: 6px;
+    align-self: flex-end;
+    margin-top: 6px;
+  }
+
+  .jp-top-extra .jp-btn-tutorial { margin-top: 0; align-self: auto; }
+
+  .jp-top-extra .jp-btn-share {
+    width: 40px;
+    padding: 0 !important;
+    background: transparent;
+    border-color: rgba(192, 132, 252, 0.45);
+  }
+
+  .jp-btn-share svg { display: block; width: 16px; height: 16px; }
+
+  @media (max-width: 480px) {
+    .jp-top-extra { margin-top: 4px; }
+    .jp-top-extra .jp-btn-share { width: 34px; }
+    .jp-btn-share svg { width: 15px; height: 15px; }
+  }
+
+  /* --- Ventana de compartir --- */
+  .jp-share-preview {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto 20px;
+    aspect-ratio: 1080 / 1350;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #E9DDF7;
+    box-shadow: 0 14px 34px rgba(43, 16, 80, 0.32);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #4B3568;
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .jp-share-preview img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+  .jp-share-actions { display: flex; flex-direction: column; gap: 12px; max-width: 380px; margin: 0 auto; }
+
+  .jp-share-main, .jp-share-sec {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 56px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.1;
+    cursor: pointer;
+    text-decoration: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .jp-share-main {
+    border: none;
+    background: #6B21A8;
+    color: #FFFFFF;
+    box-shadow: 0 6px 18px rgba(107, 33, 168, 0.38);
+  }
+
+  .jp-share-main:disabled { opacity: 0.55; cursor: default; }
+
+  .jp-share-sec {
+    border: 2px solid #C4A5E8;
+    background: #FFFFFF;
+    color: #4C1D95;
+  }
+
+  .jp-share-sec:disabled { opacity: 0.55; cursor: default; }
+
+  .jp-share-hint {
+    max-width: 380px;
+    margin: 16px auto 0;
+    text-align: center;
+    font-size: 15.5px;
+    line-height: 1.45;
+    color: #4B3568;
+  }
+
+  .jp-share-main:focus-visible, .jp-share-sec:focus-visible {
+    outline: 3px solid #F59E0B;
+    outline-offset: 2px;
+  }
 </style>
 <script>
 (function () {
@@ -1533,6 +1634,8 @@ window.DISC_PAGES_B64 = {
   function initJapaApp() {
   var TUTORIAL_VIDEO_URL = 'video/Tutorial.mp4';
   var INSTALL_PDF_URL = 'pdf/Instalacion-Japa-Movil.pdf';
+  /* Enlace que se envía al compartir (versión gratuita, sin pantalla de licencia) */
+  var SHARE_URL = 'https://japa-lite.dharmaeterno.com';
   var INSTALL_GUIDE = {
     ios: {
       note: 'En iPhone y iPad la instalación hay que hacerla desde Safari.',
@@ -1872,7 +1975,12 @@ window.DISC_PAGES_B64 = {
             '<div class="jp-deidad-item jp-ritual-item" data-ritual="kali">Kali<span class="jp-ritual-sub">Rituales de Kali</span></div>' +
           '</div>' +
         '</div>' +
-        '<button class="jp-top-btn jp-btn-tutorial" id="jp-btn-tutorial"><span class="jp-btn-label">? TUTORIAL E<br>INSTALACIÓN</span></button>' +
+        '<div class="jp-top-extra">' +
+          '<button type="button" class="jp-top-btn jp-btn-share" id="jp-btn-share" aria-label="Compartir Japa-Móvil" title="Compartir">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>' +
+          '</button>' +
+          '<button class="jp-top-btn jp-btn-tutorial" id="jp-btn-tutorial"><span class="jp-btn-label">? TUTORIAL E<br>INSTALACIÓN</span></button>' +
+        '</div>' +
       '</div>' +
       '<img class="jp-title-img" src="img/File-2026-08-20-14-40-09.png" alt="Japa-Móvil" />' +
       '<p class="jp-subtitle" id="jp-subtitle">Toca cualquier lugar de la pantalla para contabilizar cada repetici&oacute;n.</p>' +
@@ -2509,6 +2617,330 @@ window.DISC_PAGES_B64 = {
     showHome();
     closeBtn.focus();
   });
+
+  /* --- COMPARTIR la app: imagen bonita generada en el momento + hoja de compartir del móvil --- */
+  (function () {
+    var shareBtn = document.getElementById('jp-btn-share');
+    if (!shareBtn) return;
+
+    var SHARE_TEXT = 'Japa-Móvil: cuenta tus mantras con tu voz. Pruébala gratis:';
+    var DEFAULT_DEITY = 'img/ganesha_violeta_transparente.png';
+    var LOGO_SRC = 'img/IMG_0006.png';
+    var FONT_FAMILY = "'Karla', 'Helvetica Neue', Arial, sans-serif";
+
+    function shareUrlText() { return SHARE_URL.replace(/^https?:\/\//, '').replace(/\/$/, ''); }
+
+    function loadImg(src) {
+      return new Promise(function (resolve) {
+        var im = new Image();
+        im.onload = function () { resolve(im); };
+        im.onerror = function () { resolve(null); };
+        im.src = src;
+      });
+    }
+
+    function fitSize(ctx, text, maxW, size, weight, family) {
+      while (size > 18) {
+        ctx.font = weight + ' ' + size + 'px ' + family;
+        if (ctx.measureText(text).width <= maxW) break;
+        size -= 2;
+      }
+      return size;
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function containBox(img, boxW, boxH) {
+      var s = Math.min(boxW / img.naturalWidth, boxH / img.naturalHeight);
+      return { w: img.naturalWidth * s, h: img.naturalHeight * s };
+    }
+
+    function drawCard(deityImg, logoImg) {
+      var W = 1080, H = 1350;
+      var c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      var ctx = c.getContext('2d');
+      ctx.imageSmoothingQuality = 'high';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+
+      /* Fondo claro con degradado suave */
+      var bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, '#FDFAFF');
+      bg.addColorStop(0.55, '#F1E8FA');
+      bg.addColorStop(1, '#E1D1F4');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+      var halo = ctx.createRadialGradient(W * 0.86, H * 0.93, 0, W * 0.86, H * 0.93, 560);
+      halo.addColorStop(0, 'rgba(192,132,252,0.25)');
+      halo.addColorStop(1, 'rgba(192,132,252,0)');
+      ctx.fillStyle = halo;
+      ctx.fillRect(0, 0, W, H);
+
+      /* Panel oscuro con la deidad, igual que en la app */
+      var px = 56, py = 56, pw = W - 112, ph = 720;
+      var cx = W / 2, cy = py + ph / 2;
+      ctx.save();
+      roundRect(ctx, px, py, pw, ph, 56);
+      ctx.clip();
+      var pg = ctx.createLinearGradient(0, py, 0, py + ph);
+      pg.addColorStop(0, '#2E1356');
+      pg.addColorStop(1, '#130C1F');
+      ctx.fillStyle = pg;
+      ctx.fillRect(px, py, pw, ph);
+      var glow = ctx.createRadialGradient(cx, cy, 20, cx, cy, 430);
+      glow.addColorStop(0, 'rgba(192,132,252,0.38)');
+      glow.addColorStop(0.55, 'rgba(192,132,252,0.10)');
+      glow.addColorStop(1, 'rgba(192,132,252,0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(px, py, pw, ph);
+
+      /* Estrellas */
+      var seed = 7;
+      function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+      for (var i = 0; i < 90; i++) {
+        var sx = px + rnd() * pw, sy = py + rnd() * ph, sr = 0.8 + rnd() * 2.2;
+        ctx.globalAlpha = 0.25 + rnd() * 0.55;
+        ctx.fillStyle = '#EBD9FF';
+        ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      /* Mala: anillo de 27 cuentas con una iluminada, como en la app */
+      var ringR = 292, beads = 27;
+      ctx.strokeStyle = 'rgba(192,132,252,0.30)';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(cx, cy, ringR, 0, Math.PI * 2); ctx.stroke();
+      for (var b = 0; b < beads; b++) {
+        var ang = -Math.PI / 2 + (b / beads) * Math.PI * 2;
+        var bx = cx + Math.cos(ang) * ringR, by = cy + Math.sin(ang) * ringR;
+        var lit = (b === 4);
+        if (lit) {
+          var lg = ctx.createRadialGradient(bx, by, 2, bx, by, 46);
+          lg.addColorStop(0, 'rgba(232,199,122,0.95)');
+          lg.addColorStop(1, 'rgba(232,199,122,0)');
+          ctx.fillStyle = lg;
+          ctx.beginPath(); ctx.arc(bx, by, 46, 0, Math.PI * 2); ctx.fill();
+        }
+        var bgr = ctx.createRadialGradient(bx - 4, by - 4, 1, bx, by, 15);
+        bgr.addColorStop(0, lit ? '#FFF2C4' : '#F1D9A6');
+        bgr.addColorStop(1, lit ? '#E0A93A' : '#A9742F');
+        ctx.fillStyle = bgr;
+        ctx.beginPath(); ctx.arc(bx, by, lit ? 19 : 14, 0, Math.PI * 2); ctx.fill();
+      }
+
+      /* Deidad (o planeta) elegida en la app */
+      if (deityImg) {
+        var d = containBox(deityImg, 470, 470);
+        ctx.shadowColor = 'rgba(192,132,252,0.65)';
+        ctx.shadowBlur = 36;
+        ctx.drawImage(deityImg, cx - d.w / 2, cy - d.h / 2, d.w, d.h);
+        ctx.shadowBlur = 0;
+      }
+      ctx.restore();
+      roundRect(ctx, px, py, pw, ph, 56);
+      ctx.strokeStyle = 'rgba(192,132,252,0.65)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      /* Título y mensaje */
+      ctx.fillStyle = '#3B1470';
+      var tSize = fitSize(ctx, 'Japa-Móvil', 900, 128, '400', "'BitsIndianCalligra', Georgia, serif");
+      ctx.font = '400 ' + tSize + 'px ' + "'BitsIndianCalligra', Georgia, serif";
+      ctx.fillText('Japa-Móvil', cx, 925);
+
+      ctx.fillStyle = '#2B1050';
+      var l1 = 'Cuenta tus mantras con tu voz';
+      var s1 = fitSize(ctx, l1, 940, 60, '800', FONT_FAMILY);
+      ctx.font = '800 ' + s1 + 'px ' + FONT_FAMILY;
+      ctx.fillText(l1, cx, 1006);
+
+      ctx.fillStyle = '#4B3568';
+      var l2 = 'Malas sagradas, deidades y bases de meditación';
+      var s2 = fitSize(ctx, l2, 940, 38, '600', FONT_FAMILY);
+      ctx.font = '600 ' + s2 + 'px ' + FONT_FAMILY;
+      ctx.fillText(l2, cx, 1066);
+
+      /* Franja inferior oscura: logo + enlace */
+      var bx0 = 56, by0 = 1120, bw = W - 112, bh = 174;
+      var fg = ctx.createLinearGradient(0, by0, 0, by0 + bh);
+      fg.addColorStop(0, '#2A1250');
+      fg.addColorStop(1, '#170E2A');
+      ctx.fillStyle = fg;
+      roundRect(ctx, bx0, by0, bw, bh, 48);
+      ctx.fill();
+
+      if (logoImg) {
+        var lgz = containBox(logoImg, 300, 118);
+        ctx.drawImage(logoImg, bx0 + 44, by0 + (bh - lgz.h) / 2, lgz.w, lgz.h);
+      }
+      var tx = bx0 + 44 + 300 + 40;
+      var tw = bx0 + bw - 36 - tx;
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#F8F0E0';
+      var cta = 'Pruébala gratis';
+      var cs = fitSize(ctx, cta, tw, 54, '800', FONT_FAMILY);
+      ctx.font = '800 ' + cs + 'px ' + FONT_FAMILY;
+      ctx.fillText(cta, tx, by0 + 78);
+      ctx.fillStyle = '#E3C8FF';
+      var url = shareUrlText();
+      var us = fitSize(ctx, url, tw, 34, '700', FONT_FAMILY);
+      ctx.font = '700 ' + us + 'px ' + FONT_FAMILY;
+      ctx.fillText(url, tx, by0 + 132);
+
+      return c;
+    }
+
+    function buildCard() {
+      var deityHidden = topDeityImg.classList.contains('jp-hidden');
+      var deitySrc = deityHidden ? DEFAULT_DEITY : (topDeityImg.getAttribute('src') || DEFAULT_DEITY);
+      var fontReady = (document.fonts && document.fonts.load)
+        ? document.fonts.load("100px 'BitsIndianCalligra'").catch(function () {})
+        : Promise.resolve();
+      return Promise.all([loadImg(deitySrc), loadImg(LOGO_SRC), fontReady]).then(function (r) {
+        var deity = r[0] || null;
+        return loadImgFallback(deity).then(function (d) { return drawCard(d, r[1]); });
+      });
+    }
+
+    function loadImgFallback(deity) {
+      return deity ? Promise.resolve(deity) : loadImg(DEFAULT_DEITY);
+    }
+
+    function canvasToBlob(canvas) {
+      return new Promise(function (resolve) {
+        try { canvas.toBlob(function (b) { resolve(b); }, 'image/jpeg', 0.92); }
+        catch (e) { resolve(null); }
+      });
+    }
+
+    shareBtn.addEventListener('click', function () {
+      var overlay = document.createElement('div');
+      overlay.className = 'jp-help-modal';
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-label', 'Compartir Japa-Móvil');
+      overlay.innerHTML =
+        '<div class="jp-help-panel">' +
+          '<div class="jp-help-bar">' +
+            '<button type="button" class="jp-help-btn jp-help-close" id="jp-share-close"><span aria-hidden="true">&times;</span> Cerrar</button>' +
+          '</div>' +
+          '<div class="jp-help-scroll">' +
+            '<h2 class="jp-help-title">Comparte Japa-Móvil</h2>' +
+            '<p class="jp-help-sub">Se envía esta imagen con el enlace para que otras personas la prueben gratis.</p>' +
+            '<div class="jp-share-preview" id="jp-share-preview">Preparando la imagen…</div>' +
+            '<div class="jp-share-actions">' +
+              '<button type="button" class="jp-share-main" id="jp-share-go" disabled>Compartir</button>' +
+              '<button type="button" class="jp-share-sec" id="jp-share-dl" disabled>Descargar imagen</button>' +
+              '<button type="button" class="jp-share-sec" id="jp-share-copy">Copiar enlace</button>' +
+            '</div>' +
+            '<p class="jp-share-hint">También puedes mantener pulsada la imagen para guardarla.</p>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(overlay);
+
+      var prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+
+      var preview = overlay.querySelector('#jp-share-preview');
+      var goBtn = overlay.querySelector('#jp-share-go');
+      var dlBtn = overlay.querySelector('#jp-share-dl');
+      var copyBtn = overlay.querySelector('#jp-share-copy');
+      var closeBtn = overlay.querySelector('#jp-share-close');
+      var blob = null, objUrl = null, closed = false;
+
+      var canShareFiles = !!(navigator.canShare && window.File);
+      if (!navigator.share) goBtn.textContent = 'Enviar por WhatsApp';
+
+      function closeShare() {
+        closed = true;
+        document.removeEventListener('keydown', onKey);
+        document.body.style.overflow = prevOverflow;
+        if (objUrl) URL.revokeObjectURL(objUrl);
+        overlay.remove();
+      }
+      function onKey(e) { if (e.key === 'Escape') closeShare(); }
+
+      buildCard().then(canvasToBlob).then(function (b) {
+        if (closed) return;
+        if (!b) {
+          preview.textContent = 'No se pudo preparar la imagen. Aun así puedes compartir el enlace.';
+          goBtn.disabled = false;
+          return;
+        }
+        blob = b;
+        objUrl = URL.createObjectURL(b);
+        preview.innerHTML = '';
+        var im = document.createElement('img');
+        im.src = objUrl;
+        im.alt = 'Imagen para compartir Japa-Móvil';
+        preview.appendChild(im);
+        goBtn.disabled = false;
+        dlBtn.disabled = false;
+      });
+
+      goBtn.addEventListener('click', function () {
+        var text = SHARE_TEXT + ' ' + SHARE_URL;
+        if (navigator.share) {
+          if (blob && canShareFiles) {
+            var file = new File([blob], 'Japa-Movil.jpg', { type: 'image/jpeg' });
+            var data = { files: [file], title: 'Japa-Móvil', text: text };
+            if (navigator.canShare(data)) {
+              navigator.share(data).catch(function () {});
+              return;
+            }
+          }
+          navigator.share({ title: 'Japa-Móvil', text: SHARE_TEXT, url: SHARE_URL }).catch(function () {});
+        } else {
+          window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener');
+        }
+      });
+
+      dlBtn.addEventListener('click', function () {
+        if (!objUrl) return;
+        var a = document.createElement('a');
+        a.href = objUrl;
+        a.download = 'Japa-Movil.jpg';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      });
+
+      copyBtn.addEventListener('click', function () {
+        function done(ok) {
+          var old = 'Copiar enlace';
+          copyBtn.textContent = ok ? '¡Enlace copiado!' : 'No se pudo copiar';
+          setTimeout(function () { if (!closed) copyBtn.textContent = old; }, 2200);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(SHARE_URL).then(function () { done(true); }, function () { done(false); });
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = SHARE_URL;
+          ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          var ok = false;
+          try { ok = document.execCommand('copy'); } catch (e) {}
+          ta.remove();
+          done(ok);
+        }
+      });
+
+      closeBtn.addEventListener('click', closeShare);
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) closeShare(); });
+      document.addEventListener('keydown', onKey);
+      closeBtn.focus();
+    });
+  })();
 
   root.addEventListener('click', function(e) {
     var btn = e.target.closest('[data-player]');
