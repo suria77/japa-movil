@@ -1527,31 +1527,49 @@ window.DISC_PAGES_B64 = {
     .jp-help-card, .jp-help-seg button { transition: none; }
   }
 
-  /* --- Icono de compartir junto al botón TUTORIAL E INSTALACIÓN (misma fila, no añade altura) --- */
-  .jp-top-extra {
+  /* --- Ayuda y compartir: esquina inferior derecha, junto al logo --- */
+  .jp-bottom-actions {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    z-index: 20;
     display: flex;
+    flex-direction: column;
     align-items: stretch;
-    justify-content: flex-end;
-    gap: 6px;
-    align-self: flex-end;
-    margin-top: 6px;
+    gap: 10px;
   }
 
-  .jp-top-extra .jp-btn-tutorial { margin-top: 0; align-self: auto; }
-
-  .jp-top-extra .jp-btn-share {
-    width: 40px;
-    padding: 0 !important;
+  .jp-bottom-actions .jp-top-btn {
+    margin: 0;
+    align-self: auto;
+    min-height: 38px;
     background: transparent;
-    border-color: rgba(192, 132, 252, 0.45);
+    border-color: rgba(192, 132, 252, 0.5);
+    font-weight: 600;
+    font-size: 12px !important;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+    padding: 9px 18px !important;
+    text-align: center;
+    white-space: nowrap;
   }
 
-  .jp-btn-share svg { display: block; width: 16px; height: 16px; }
+  .jp-bottom-actions .jp-btn-tutorial .jp-btn-label {
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
+  }
+
+  /* Deja sitio debajo del contenido para que nada quede pegado a estos botones */
+  .jp-page { padding-bottom: 148px; }
 
   @media (max-width: 480px) {
-    .jp-top-extra { margin-top: 4px; }
-    .jp-top-extra .jp-btn-share { width: 34px; }
-    .jp-btn-share svg { width: 15px; height: 15px; }
+    .jp-bottom-actions { gap: 8px; }
+    .jp-bottom-actions .jp-top-btn {
+      font-size: 10.5px !important;
+      padding: 8px 14px !important;
+    }
+    .jp-page { padding-bottom: 138px; }
   }
 
   /* --- Ventana de compartir --- */
@@ -1844,6 +1862,10 @@ window.DISC_PAGES_B64 = {
     '<div class="jp-page" id="jp-page-area">' +
       '<img class="jp-top-deity-img" id="jp-top-deity-img" src="img/ganesha_violeta_transparente.png" alt="Deidad" />' +
       '<img class="jp-bottom-logo" src="img/IMG_0006.png" alt="Logo" />' +
+      '<div class="jp-bottom-actions" id="jp-bottom-actions">' +
+        '<button class="jp-top-btn jp-btn-tutorial" id="jp-btn-tutorial"><span class="jp-btn-label">? TUTORIAL E<br>INSTALACIÓN</span></button>' +
+        '<button type="button" class="jp-top-btn jp-btn-share" id="jp-btn-share">COMPARTIR APP</button>' +
+      '</div>' +
       '<div class="jp-cosmos-bg" aria-hidden="true">' +
         '<span class="jp-nebula"></span>' +
         '<span class="jp-star-layer jp-star-layer-1"></span>' +
@@ -1974,12 +1996,6 @@ window.DISC_PAGES_B64 = {
             '<div class="jp-deidad-item jp-ritual-item" data-ritual="durga">Durga<span class="jp-ritual-sub">Rituales de Durga</span></div>' +
             '<div class="jp-deidad-item jp-ritual-item" data-ritual="kali">Kali<span class="jp-ritual-sub">Rituales de Kali</span></div>' +
           '</div>' +
-        '</div>' +
-        '<div class="jp-top-extra">' +
-          '<button type="button" class="jp-top-btn jp-btn-share" id="jp-btn-share" aria-label="Compartir Japa-Móvil" title="Compartir">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>' +
-          '</button>' +
-          '<button class="jp-top-btn jp-btn-tutorial" id="jp-btn-tutorial"><span class="jp-btn-label">? TUTORIAL E<br>INSTALACIÓN</span></button>' +
         '</div>' +
       '</div>' +
       '<img class="jp-title-img" src="img/File-2026-08-20-14-40-09.png" alt="Japa-Móvil" />' +
@@ -3028,6 +3044,7 @@ window.DISC_PAGES_B64 = {
   function setLockUIState(locked) {
     var elementsToDisable = [
       document.getElementById('jp-top-tabs'),
+      document.getElementById('jp-bottom-actions'),
       document.getElementById('jp-mode-switch'),
       document.getElementById('jp-target-switch')
     ];
