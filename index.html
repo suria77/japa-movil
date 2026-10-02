@@ -1536,20 +1536,20 @@ window.DISC_PAGES_B64 = {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: 6px;
   }
 
   .jp-bottom-actions .jp-top-btn {
     margin: 0;
     align-self: auto;
-    min-height: 38px;
+    min-height: 0;
     background: transparent;
     border-color: rgba(192, 132, 252, 0.5);
     font-weight: 600;
-    font-size: 12px !important;
-    letter-spacing: 0.06em;
-    line-height: 1.25;
-    padding: 9px 18px !important;
+    font-size: 11px !important;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    padding: 6px 11px !important;
     text-align: center;
     white-space: nowrap;
   }
@@ -1557,19 +1557,19 @@ window.DISC_PAGES_B64 = {
   .jp-bottom-actions .jp-btn-tutorial .jp-btn-label {
     white-space: normal;
     text-align: center;
-    line-height: 1.25;
+    line-height: 1.2;
   }
 
   /* Deja sitio debajo del contenido para que nada quede pegado a estos botones */
-  .jp-page { padding-bottom: 148px; }
+  .jp-page { padding-bottom: 120px; }
 
   @media (max-width: 480px) {
-    .jp-bottom-actions { gap: 8px; }
+    .jp-bottom-actions { gap: 5px; }
     .jp-bottom-actions .jp-top-btn {
-      font-size: 10.5px !important;
-      padding: 8px 14px !important;
+      font-size: 10px !important;
+      padding: 5px 9px !important;
     }
-    .jp-page { padding-bottom: 138px; }
+    .jp-page { padding-bottom: 112px; }
   }
 
   /* --- Ventana de compartir --- */
@@ -2639,12 +2639,10 @@ window.DISC_PAGES_B64 = {
     var shareBtn = document.getElementById('jp-btn-share');
     if (!shareBtn) return;
 
-    var SHARE_TEXT = 'Japa-Móvil: cuenta tus mantras con tu voz. Pruébala gratis:';
-    var DEFAULT_DEITY = 'img/ganesha_violeta_transparente.png';
+    var SHARE_TEXT = 'Japa-Móvil: El poder del mantra en tus manos. Pruébala gratis:';
+    var ICON_SRC = 'img/icon.png';
     var LOGO_SRC = 'img/IMG_0006.png';
     var FONT_FAMILY = "'Karla', 'Helvetica Neue', Arial, sans-serif";
-
-    function shareUrlText() { return SHARE_URL.replace(/^https?:\/\//, '').replace(/\/$/, ''); }
 
     function loadImg(src) {
       return new Promise(function (resolve) {
@@ -2679,7 +2677,7 @@ window.DISC_PAGES_B64 = {
       return { w: img.naturalWidth * s, h: img.naturalHeight * s };
     }
 
-    function drawCard(deityImg, logoImg) {
+    function drawCard(iconImg, logoImg) {
       var W = 1080, H = 1350;
       var c = document.createElement('canvas');
       c.width = W; c.height = H;
@@ -2701,7 +2699,7 @@ window.DISC_PAGES_B64 = {
       ctx.fillStyle = halo;
       ctx.fillRect(0, 0, W, H);
 
-      /* Panel oscuro con la deidad, igual que en la app */
+      /* Panel oscuro con el icono de la app */
       var px = 56, py = 56, pw = W - 112, ph = 720;
       var cx = W / 2, cy = py + ph / 2;
       ctx.save();
@@ -2730,37 +2728,33 @@ window.DISC_PAGES_B64 = {
       }
       ctx.globalAlpha = 1;
 
-      /* Mala: anillo de 27 cuentas con una iluminada, como en la app */
-      var ringR = 292, beads = 27;
-      ctx.strokeStyle = 'rgba(192,132,252,0.30)';
+      /* Anillos suaves + icono de la app */
       ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(cx, cy, ringR, 0, Math.PI * 2); ctx.stroke();
-      for (var b = 0; b < beads; b++) {
-        var ang = -Math.PI / 2 + (b / beads) * Math.PI * 2;
-        var bx = cx + Math.cos(ang) * ringR, by = cy + Math.sin(ang) * ringR;
-        var lit = (b === 4);
-        if (lit) {
-          var lg = ctx.createRadialGradient(bx, by, 2, bx, by, 46);
-          lg.addColorStop(0, 'rgba(232,199,122,0.95)');
-          lg.addColorStop(1, 'rgba(232,199,122,0)');
-          ctx.fillStyle = lg;
-          ctx.beginPath(); ctx.arc(bx, by, 46, 0, Math.PI * 2); ctx.fill();
-        }
-        var bgr = ctx.createRadialGradient(bx - 4, by - 4, 1, bx, by, 15);
-        bgr.addColorStop(0, lit ? '#FFF2C4' : '#F1D9A6');
-        bgr.addColorStop(1, lit ? '#E0A93A' : '#A9742F');
-        ctx.fillStyle = bgr;
-        ctx.beginPath(); ctx.arc(bx, by, lit ? 19 : 14, 0, Math.PI * 2); ctx.fill();
-      }
+      ctx.strokeStyle = 'rgba(192,132,252,0.24)';
+      ctx.beginPath(); ctx.arc(cx, cy, 330, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeStyle = 'rgba(192,132,252,0.13)';
+      ctx.beginPath(); ctx.arc(cx, cy, 398, 0, Math.PI * 2); ctx.stroke();
 
-      /* Deidad (o planeta) elegida en la app */
-      if (deityImg) {
-        var d = containBox(deityImg, 470, 470);
-        ctx.shadowColor = 'rgba(192,132,252,0.65)';
-        ctx.shadowBlur = 36;
-        ctx.drawImage(deityImg, cx - d.w / 2, cy - d.h / 2, d.w, d.h);
-        ctx.shadowBlur = 0;
+      var isz = 470, ix = cx - isz / 2, iy = cy - isz / 2, irad = isz * 0.225;
+      ctx.save();
+      ctx.shadowColor = 'rgba(192,132,252,0.8)';
+      ctx.shadowBlur = 80;
+      ctx.fillStyle = '#1B0E33';
+      roundRect(ctx, ix, iy, isz, isz, irad);
+      ctx.fill();
+      ctx.restore();
+      if (iconImg) {
+        var sw = Math.min(iconImg.naturalWidth, iconImg.naturalHeight);
+        ctx.save();
+        roundRect(ctx, ix, iy, isz, isz, irad);
+        ctx.clip();
+        ctx.drawImage(iconImg, (iconImg.naturalWidth - sw) / 2, (iconImg.naturalHeight - sw) / 2, sw, sw, ix, iy, isz, isz);
+        ctx.restore();
       }
+      ctx.strokeStyle = 'rgba(235,217,255,0.55)';
+      ctx.lineWidth = 3;
+      roundRect(ctx, ix, iy, isz, isz, irad);
+      ctx.stroke();
       ctx.restore();
       roundRect(ctx, px, py, pw, ph, 56);
       ctx.strokeStyle = 'rgba(192,132,252,0.65)';
@@ -2774,18 +2768,18 @@ window.DISC_PAGES_B64 = {
       ctx.fillText('Japa-Móvil', cx, 925);
 
       ctx.fillStyle = '#2B1050';
-      var l1 = 'Cuenta tus mantras con tu voz';
-      var s1 = fitSize(ctx, l1, 940, 60, '800', FONT_FAMILY);
+      var l1 = 'Tu práctica de mantras más fácil que nunca';
+      var s1 = fitSize(ctx, l1, 940, 56, '800', FONT_FAMILY);
       ctx.font = '800 ' + s1 + 'px ' + FONT_FAMILY;
       ctx.fillText(l1, cx, 1006);
 
       ctx.fillStyle = '#4B3568';
-      var l2 = 'Malas sagradas, deidades y bases de meditación';
-      var s2 = fitSize(ctx, l2, 940, 38, '600', FONT_FAMILY);
+      var l2 = 'Elige tu deidad, tu mala y tu mantra';
+      var s2 = fitSize(ctx, l2, 940, 40, '600', FONT_FAMILY);
       ctx.font = '600 ' + s2 + 'px ' + FONT_FAMILY;
       ctx.fillText(l2, cx, 1066);
 
-      /* Franja inferior oscura: logo + enlace */
+      /* Franja inferior oscura: logo + "Versión gratuita" */
       var bx0 = 56, by0 = 1120, bw = W - 112, bh = 174;
       var fg = ctx.createLinearGradient(0, by0, 0, by0 + bh);
       fg.addColorStop(0, '#2A1250');
@@ -2794,41 +2788,37 @@ window.DISC_PAGES_B64 = {
       roundRect(ctx, bx0, by0, bw, bh, 48);
       ctx.fill();
 
+      var logoBoxW = 300;
       if (logoImg) {
-        var lgz = containBox(logoImg, 300, 118);
+        var lgz = containBox(logoImg, logoBoxW, 118);
         ctx.drawImage(logoImg, bx0 + 44, by0 + (bh - lgz.h) / 2, lgz.w, lgz.h);
       }
-      var tx = bx0 + 44 + 300 + 40;
+      var divX = bx0 + 44 + logoBoxW + 34;
+      ctx.strokeStyle = 'rgba(227,200,255,0.35)';
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(divX, by0 + 38); ctx.lineTo(divX, by0 + bh - 38); ctx.stroke();
+
+      var tx = divX + 38;
       var tw = bx0 + bw - 36 - tx;
       ctx.textAlign = 'left';
       ctx.fillStyle = '#F8F0E0';
-      var cta = 'Pruébala gratis';
-      var cs = fitSize(ctx, cta, tw, 54, '800', FONT_FAMILY);
+      var cta = 'Versión gratuita';
+      var cs = fitSize(ctx, cta, tw, 60, '800', FONT_FAMILY);
       ctx.font = '800 ' + cs + 'px ' + FONT_FAMILY;
-      ctx.fillText(cta, tx, by0 + 78);
-      ctx.fillStyle = '#E3C8FF';
-      var url = shareUrlText();
-      var us = fitSize(ctx, url, tw, 34, '700', FONT_FAMILY);
-      ctx.font = '700 ' + us + 'px ' + FONT_FAMILY;
-      ctx.fillText(url, tx, by0 + 132);
+      ctx.textBaseline = 'middle';
+      ctx.fillText(cta, tx, by0 + bh / 2 + 2);
+      ctx.textBaseline = 'alphabetic';
 
       return c;
     }
 
     function buildCard() {
-      var deityHidden = topDeityImg.classList.contains('jp-hidden');
-      var deitySrc = deityHidden ? DEFAULT_DEITY : (topDeityImg.getAttribute('src') || DEFAULT_DEITY);
       var fontReady = (document.fonts && document.fonts.load)
         ? document.fonts.load("100px 'BitsIndianCalligra'").catch(function () {})
         : Promise.resolve();
-      return Promise.all([loadImg(deitySrc), loadImg(LOGO_SRC), fontReady]).then(function (r) {
-        var deity = r[0] || null;
-        return loadImgFallback(deity).then(function (d) { return drawCard(d, r[1]); });
+      return Promise.all([loadImg(ICON_SRC), loadImg(LOGO_SRC), fontReady]).then(function (r) {
+        return drawCard(r[0], r[1]);
       });
-    }
-
-    function loadImgFallback(deity) {
-      return deity ? Promise.resolve(deity) : loadImg(DEFAULT_DEITY);
     }
 
     function canvasToBlob(canvas) {
