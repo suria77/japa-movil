@@ -1561,7 +1561,7 @@ window.DISC_PAGES_B64 = {
   }
 
   /* Deja sitio debajo del contenido para que nada quede pegado a estos botones */
-  .jp-page { padding-bottom: 120px; }
+  .jp-page { padding-bottom: 134px; }
 
   @media (max-width: 480px) {
     .jp-bottom-actions { gap: 5px; }
@@ -1569,7 +1569,7 @@ window.DISC_PAGES_B64 = {
       font-size: 10px !important;
       padding: 5px 9px !important;
     }
-    .jp-page { padding-bottom: 112px; }
+    .jp-page { padding-bottom: 126px; }
   }
 
   /* --- Ventana de compartir --- */
@@ -1937,7 +1937,7 @@ window.DISC_PAGES_B64 = {
           '<div class="jp-dropdown-menu jp-mantra-menu jp-hidden" id="jp-mantra-menu"></div>' +
         '</div>' +
         '<div class="jp-dropdown-container">' +
-          '<button class="jp-top-btn jp-btn-audios" id="jp-btn-audios"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg><span class="jp-btn-label">FONDO</span><span class="jp-btn-caret">&#9662;</span></button>' +
+          '<button class="jp-top-btn jp-btn-audios" id="jp-btn-audios"><svg class="jp-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg><span class="jp-btn-label">BASES</span><span class="jp-btn-caret">&#9662;</span></button>' +
           '<div class="jp-dropdown-menu jp-hidden" id="jp-audios-menu">' +
             '<div class="jp-audio-player">' +
               '<div class="jp-audio-header">' +
@@ -2471,6 +2471,18 @@ window.DISC_PAGES_B64 = {
     ritualesMenu.classList.toggle('jp-hidden');
   });
   ritualesMenu.addEventListener('click', function(e) { e.stopPropagation(); });
+  /* Al cerrar cualquier desplegable (por el motivo que sea) se recoge lo que se hubiera abierto dentro:
+     grupos (Planetas, Malas de deidades...) y descripciones. Al volver a abrirlo, todo está recogido. */
+  [deidadMenu, malaMenu, mantraMenu, audiosMenu, ritualesMenu].forEach(function(menu) {
+    if (!menu) return;
+    new MutationObserver(function() {
+      if (!menu.classList.contains('jp-hidden')) return;
+      menu.querySelectorAll('.jp-group-open, .jp-mala-open').forEach(function(el) {
+        el.classList.remove('jp-group-open');
+        el.classList.remove('jp-mala-open');
+      });
+    }).observe(menu, { attributes: true, attributeFilter: ['class'] });
+  });
   /* Cierra el menu de rituales al pulsar en cualquier otro sitio (incluidos otros botones) */
   document.addEventListener('click', function(e) {
     var cont = document.getElementById('jp-rituales-container');
@@ -2639,7 +2651,7 @@ window.DISC_PAGES_B64 = {
     var shareBtn = document.getElementById('jp-btn-share');
     if (!shareBtn) return;
 
-    var SHARE_TEXT = 'Japa-Móvil: El poder del mantra en tus manos. Pruébala gratis:';
+    var SHARE_TEXT = 'Japa-Móvil: El poder del mantra en tus manos. Pruébala en:';
     var ICON_SRC = 'img/icon.png';
     var LOGO_SRC = 'img/IMG_0006.png';
     var FONT_FAMILY = "'Karla', 'Helvetica Neue', Arial, sans-serif";
@@ -2841,7 +2853,7 @@ window.DISC_PAGES_B64 = {
           '</div>' +
           '<div class="jp-help-scroll">' +
             '<h2 class="jp-help-title">Comparte Japa-Móvil</h2>' +
-            '<p class="jp-help-sub">Se envía esta imagen con el enlace para que otras personas la prueben gratis.</p>' +
+            '<p class="jp-help-sub">Se envía esta imagen con el enlace para que otras personas la prueben.</p>' +
             '<div class="jp-share-preview" id="jp-share-preview">Preparando la imagen…</div>' +
             '<div class="jp-share-actions">' +
               '<button type="button" class="jp-share-main" id="jp-share-go" disabled>Compartir</button>' +
