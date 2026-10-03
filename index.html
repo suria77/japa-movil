@@ -1383,6 +1383,15 @@ window.DISC_PAGES_B64 = {
     box-shadow: 0 10px 26px rgba(107, 33, 168, 0.22);
   }
 
+  .jp-help-card-guide {
+    color: #3A2500;
+    background:
+      radial-gradient(circle at 90% 0%, rgba(255, 255, 255, 0.7) 0%, transparent 55%),
+      linear-gradient(135deg, #FBE8B5 0%, #F3CF73 100%);
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 10px 26px rgba(176, 120, 20, 0.28);
+  }
+
   .jp-help-card-icon {
     flex: 0 0 auto;
     width: 66px;
@@ -1400,6 +1409,11 @@ window.DISC_PAGES_B64 = {
 
   .jp-help-card-install .jp-help-card-icon {
     background: rgba(255, 255, 255, 0.75);
+    border: 2px solid #FFFFFF;
+  }
+
+  .jp-help-card-guide .jp-help-card-icon {
+    background: rgba(255, 255, 255, 0.8);
     border: 2px solid #FFFFFF;
   }
 
@@ -1489,6 +1503,11 @@ window.DISC_PAGES_B64 = {
     border-radius: 16px;
     background: #150F1E;
     box-shadow: 0 10px 24px rgba(43, 16, 80, 0.25);
+  }
+
+  .jp-guide-page img {
+    aspect-ratio: 2 / 3;
+    background: #E8DAF7;
   }
 
   .jp-help-pdf {
@@ -1652,6 +1671,24 @@ window.DISC_PAGES_B64 = {
   function initJapaApp() {
   var TUTORIAL_VIDEO_URL = 'video/Tutorial.mp4';
   var INSTALL_PDF_URL = 'pdf/Instalacion-Japa-Movil.pdf';
+  var GUIDE_PDF_URL = 'pdf/Guia-Japa-Movil.pdf';
+  var GUIDE_PAGES = [
+    'Portada de la guía de uso de Japa-Móvil',
+    'Bienvenida e índice de la guía',
+    'La pantalla principal de la app, con sus partes numeradas',
+    'Cómo elegir la deidad y ver sus características',
+    'Cómo elegir la mala: de deidades o de planetas',
+    'Cómo elegir el mantra, leer su explicación y escuchar su pronunciación',
+    'Cuentas y rondas: 108 repeticiones por ronda',
+    'Modo 1: contar a mano',
+    'Modo 2: contar por voz',
+    'Modo 3: grabar y repetir',
+    'Bases: audios de fondo meditativo',
+    'Campanas al final de cada ronda y de la práctica',
+    'Botones de tutorial e instalación y de compartir la app',
+    'Material exclusivo: packs, música, audiolibros y libros',
+    'Despedida: que tengas una buena sadhana'
+  ];
   /* Enlace que se envía al compartir (versión gratuita, sin pantalla de licencia) */
   var SHARE_URL = 'https://japa-lite.dharmaeterno.com';
   var INSTALL_GUIDE = {
@@ -2567,6 +2604,16 @@ window.DISC_PAGES_B64 = {
             '</span>' +
             '<span class="jp-help-card-go" aria-hidden="true">&#8250;</span>' +
           '</button>' +
+          '<button type="button" class="jp-help-card jp-help-card-guide" data-help="guide">' +
+            '<span class="jp-help-card-icon">' +
+              '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7A4B00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/><path d="M9 8h7M9 12h5"/></svg>' +
+            '</span>' +
+            '<span class="jp-help-card-text">' +
+              '<span class="jp-help-card-name">Guía ilustrada</span>' +
+              '<span class="jp-help-card-desc">Paso a paso con imágenes, para leer a tu ritmo. Con PDF.</span>' +
+            '</span>' +
+            '<span class="jp-help-card-go" aria-hidden="true">&#8250;</span>' +
+          '</button>' +
           '<button type="button" class="jp-help-card jp-help-card-install" data-help="install">' +
             '<span class="jp-help-card-icon">' +
               '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4C1D95" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M12 8v7M9 12.5l3 3 3-3"/></svg>' +
@@ -2613,6 +2660,21 @@ window.DISC_PAGES_B64 = {
       body.scrollTop = 0;
     }
 
+    function showGuide() {
+      backBtn.classList.remove('jp-help-hide');
+      var pagesHtml = GUIDE_PAGES.map(function (alt, i) {
+        var n = (i < 9 ? '0' : '') + (i + 1);
+        return '<figure class="jp-help-step jp-guide-page"><img src="img/guia-' + n + '.webp" alt="' + alt + '" loading="lazy" decoding="async" /></figure>';
+      }).join('');
+      body.innerHTML =
+        '<h2 class="jp-help-title">Guía ilustrada</h2>' +
+        '<p class="jp-help-sub">Desliza para leerla de arriba abajo.</p>' +
+        '<a class="jp-help-pdf" style="margin:0 0 22px" href="' + GUIDE_PDF_URL + '" target="_blank" rel="noopener">Descargar la guía en PDF</a>' +
+        '<div class="jp-help-steps">' + pagesHtml + '</div>' +
+        '<a class="jp-help-pdf" href="' + GUIDE_PDF_URL + '" target="_blank" rel="noopener">Descargar la guía en PDF</a>';
+      body.scrollTop = 0;
+    }
+
     function closeHelp() {
       stopVideo();
       document.removeEventListener('keydown', onKey);
@@ -2627,7 +2689,9 @@ window.DISC_PAGES_B64 = {
     body.addEventListener('click', function (e) {
       var card = e.target.closest('[data-help]');
       if (card) {
-        if (card.getAttribute('data-help') === 'video') showVideo();
+        var which = card.getAttribute('data-help');
+        if (which === 'video') showVideo();
+        else if (which === 'guide') showGuide();
         else showInstall(detectOS());
         return;
       }
